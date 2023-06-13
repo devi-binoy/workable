@@ -1,7 +1,7 @@
 import { db } from "../firebase";
-import { collection, addDoc,serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 
-export const addJobDetails = async (data,userid) => {
+export const addJobDetails = async (data,user) => {
     const collectionRef = collection(db, "joblistings");
     await addDoc(collectionRef, {
         JobTitle: data.JobTitle,
@@ -14,9 +14,12 @@ export const addJobDetails = async (data,userid) => {
         jobDescription: data.jobDescription,
         experience: data.experience,
         qualification: data.qualification,
+        workmode: data.workMode,     
         posted_date: serverTimestamp(), 
         numberofapplicants: 0,  
-        userid: userid        
+        userid: user.uid,
+        companyname: user.displayName,   
+        companylogo: user.photoURL,
     }).then(()=>{
         console.log("Document added");
     }
@@ -25,3 +28,7 @@ export const addJobDetails = async (data,userid) => {
     });
 
     }
+
+export const deleteJobDetails = async (id,user) => {
+    await deleteDoc(doc(db, "joblistings", id));
+}

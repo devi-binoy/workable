@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState, React} from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Typography,Tab,Box } from '@mui/material';
 import { TabContext } from '@mui/lab';
@@ -8,22 +8,10 @@ import TabPanel from '@mui/lab/TabPanel';
 import CustomTable from './CustomTable';
 
 const CandidateTable = () => {
-    const [value, setValue] = React.useState('1');
+    const [value, setValue] = useState('1');
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
-      const data = [
-        { candidateName: 'Phoebe Buffay', applicationStatus: 'Rejected', appliedRole: 'UX Designer', applicationDate: '2023-05-05' },
-        { candidateName: 'John Doe', applicationStatus: 'In Progress', appliedRole: 'Software Engineer', applicationDate: '2023-05-01' },
-        { candidateName: 'Rachel Green', applicationStatus: 'Accepted', appliedRole: 'Data Analyst', applicationDate: '2023-04-28' },
-        { candidateName: 'Monica Geller', applicationStatus: 'Rejected', appliedRole: 'UX Designer', applicationDate: '2023-05-05' },
-        { candidateName: 'Chandler Bing', applicationStatus: 'In Progress', appliedRole: 'Software Engineer', applicationDate: '2023-05-01' },
-    ];
-    const data1 = [
-        { candidateName: 'Chandler Bing', applicationStatus: 'In Progress', appliedRole: 'Software Engineer', applicationDate: '2023-05-01' },
-        { candidateName: 'Ross Geller', applicationStatus: 'Accepted', appliedRole: 'Data Analyst', applicationDate: '2023-04-28' },    
-        { candidateName: 'Joey Tribbiani', applicationStatus: 'In Progress', appliedRole: 'Software Engineer', applicationDate: '2023-05-01' }
-    ];
   return (
     <Grid container flexDirection={'column'} 
     sx={{ 
@@ -53,9 +41,9 @@ const CandidateTable = () => {
                 <Tab label="Rejected" value="3" />
                 </TabList>
             </Box>
-            <TabPanel value="1"><CustomTable data={data}/></TabPanel>
-            <TabPanel value="2"><CustomTable data={data1}/></TabPanel>
-            <TabPanel value="3"><CustomTable data={data}/></TabPanel>
+            <TabPanel value="1"><CustomTable /></TabPanel>
+            <TabPanel value="2"><CustomTable status={"Accepted"}/></TabPanel>
+            <TabPanel value="3"><CustomTable status={"Rejected"}/></TabPanel>
         </TabContext>
        </Grid>
     </Grid>

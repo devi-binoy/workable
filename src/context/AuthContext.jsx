@@ -9,46 +9,52 @@ export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState({});
 
 
+
     const createUser = (email, password) => {
+        return new Promise ((resolve,reject) => {
        createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
         console.log(user);
+        resolve(true)
         // ...
         })
         .catch((error) => {
-        const errorCode = error.code;
-        console.log(errorCode);
+            reject(error)
         });
-  
+        });
     }
 
     const loginUser = (email, password) => {
+        return new Promise ((resolve,reject) => {
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
+        resolve(true)
         // ...
         })
         .catch((error) => {
-        const errorCode = error.code;
-        console.log(errorCode);
+            reject(error)
+        });
         });
     }
 
     const loginGoogle = () => {
+            return new Promise ((resolve,reject)=>{
             signInWithPopup(auth, provider)
             .then((result) => {
             // The signed-in user info.
             const user = result.user;
             console.log(user);
+            resolve(true)
             // ...
             }).catch((error) => {
             // Handle errors here
-            const errorCode = error.code;
-            console.log('error',errorCode);
+           reject(error);
             });
+        });
 
     }
 
@@ -61,14 +67,16 @@ export const AuthContextProvider = ({ children }) => {
         });
     }
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-         console.log(user);
-         setUser(user);
-         });
-         return () => {
-             unsubscribe();
-         }
-     }, [])
+       onAuthStateChanged(auth, (user) => {
+            if (user) {
+              setUser(user);
+            } else {
+              setUser(null);
+            }
+          }
+        );
+    
+     }, [user])
 
     return (
         <UserContext.Provider value={{ createUser ,loginUser,logoutUser,loginGoogle,user}}>

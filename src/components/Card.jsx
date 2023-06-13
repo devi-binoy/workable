@@ -1,47 +1,43 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid, Chip, Box, Avatar, useTheme } from '@mui/material';
-import rocket from '../assets/Rocket.png'
-
+import { Card, CardContent, Typography, Grid, Chip, Box, useTheme } from '@mui/material';
+import {Edit as EditIcon} from '@mui/icons-material';
+import {Delete as DeleteIcon} from '@mui/icons-material';
+import { deleteJobDetails } from '../services/JobDetails';
 const CardExample = (props) => {
   const theme = useTheme();
 
+  const handleDelete = () => {
+    deleteJobDetails(props.id); 
+    props.removeDeletedItem(props.id); 
+  };
+
   return (
-    <Card sx={{ height:'fit-content', width: 300,padding:1 ,borderRadius:4 ,margin:1}}>
+    <Card sx={{  height:'fit-content', width: 350,padding:1 ,borderRadius:4 ,margin:1}}>
       <CardContent>
         <Grid container alignItems="center" justifyContent="flex-start" marginBottom={2}>
-
-
           <Grid item>
-            <Avatar
-              alt="Logo"
-              src={props.img}
-              sx={{ width: 40, height: 40 }}
-            />
-          </Grid>
-
-
-
-          <Grid item marginLeft={3}>
             <Typography variant="subtitle1" fontWeight="bold">
-              {props.position}
+              {props.JobTitle}
             </Typography>
             <Typography variant="body2">
-              Posted {props.days} days ago
+              Posted on {props.posted_date} 
             </Typography>
           </Grid>
-
-
+          <EditIcon sx={{marginTop:-2, marginLeft:'auto',cursor:'pointer'}}/>
+          <DeleteIcon onClick={handleDelete} sx={{marginTop:-2,cursor:'pointer'}}/>
         </Grid>
 
         <Grid container alignItems="center" justifyContent="space-between">
         <Grid item>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '150px' }}>
               <Chip
-                label={props.location}
+                label={props.JobLocation}
                 sx={{
                   marginRight: "0.5rem",
                   backgroundColor: "#CAFFCF",
                   borderRadius: 3,
+                  pt: "1em",
+                  pb: "1em",
                   [theme.breakpoints.down("md")]: {
                     height: "1rem",
                     fontSize: "0.9rem",
@@ -60,12 +56,39 @@ const CardExample = (props) => {
                 }}
               />
 
-<Chip
-                label={`${props.years}+ years exp`}
+              <Chip
+                label={`${props.experience} exp`}
                 sx={{
                   marginRight: "0.5rem",
                   backgroundColor: "#CAFFCF",
                   borderRadius: 3,
+                  pt: "1em",
+                  pb: "1em",
+                  [theme.breakpoints.down("md")]: {
+                    height: "1rem",
+                    fontSize: "0.9rem",
+                  },
+                  [theme.breakpoints.down("sm")]: {
+                    height: "0.9rem",
+                    fontSize: "0.7rem",
+                    marginLeft: "0.6rem",
+                  },
+                  [theme.breakpoints.down("xs")]: {
+                    height: "0.7rem",
+                    fontSize: "0.6rem",
+                    marginLeft: "0rem",
+                  },
+
+                }}
+              />
+              <Chip
+                label={props.workmode}
+                sx={{
+                  marginRight: "0.5rem",
+                  backgroundColor: "#CAFFCF",
+                  borderRadius: 3,
+                  pt: "1em",
+                  pb: "1em",
                   [theme.breakpoints.down("md")]: {
                     height: "1rem",
                     fontSize: "0.9rem",
@@ -91,17 +114,13 @@ const CardExample = (props) => {
 
 
         <Grid container justifyContent="space-between" alignItems={'center'} marginTop={2}>
-          <Grid item flexDirection={'row'} display={'flex'} justifyContent="center" alignItems={'center'}>
-          <Typography variant="h4">
-                {props.applicants}
+          <Grid item flexDirection={'row'} display={'flex'} justifyContent="center" alignItems={'center'} sx={{cursor:'pointer'}}>
+            <Typography variant="h4">
+                {props.numberofapplicants}
               </Typography>
             <Typography variant="body2" marginLeft={0.5}>
-
               applicants
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">{props.lastweek} in last week</Typography>
           </Grid>
         </Grid>
       </CardContent>

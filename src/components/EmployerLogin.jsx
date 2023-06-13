@@ -9,6 +9,7 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 import {  UserAuth } from '../context/AuthContext';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 
 const EmployerLogin = () => {
@@ -16,33 +17,51 @@ const EmployerLogin = () => {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const {createUser,loginUser,loginGoogle} = UserAuth();
+    const [loginError, setLoginError] = useState("");
+    const navigate = useNavigate();
 
     const handleSignup = async(e) => {
+        setLoginError("");
         e.preventDefault();
-        console.log(email);
-        try{
-           await createUser(email,password);
-        }catch(err){
-            console.log(err.code);
-        }
+        createUser(email, password).then((loggedIn) => {
+            if(loggedIn)
+              {   console.log("hello there")
+                  navigate('/companyform');
+              }
+            }
+            ).catch((error) => {
+            console.log(error.code);
+            setLoginError(error.code);
+            });
+
 
 
     }
-    const handleLogin=async(e)=>{
+    const handleLogin =(e) => {
+        setLoginError("");
         e.preventDefault();
-        try{
-            await loginUser(email,password);
-        }catch(err){
-            console.log(err.code);
-        }
-    }
+
+          loginUser(email, password)
+            .then((loggedIn) => {
+              if(loggedIn)
+                {   console.log("hello there")
+                    navigate('/postings');
+                }
+
+            })
+            .catch((error) => {
+            console.log(error.code);
+            setLoginError(error.code);
+            });
+      };
     const handleGoogle = async(e) => {
         e.preventDefault();
-        try{
-            await loginGoogle();
-        }catch(err){
-            console.log(err.code);
-        }
+       loginGoogle().then((loggedIn) => {
+        if(loggedIn)
+          {   console.log("hello there")
+              navigate('/postings');
+          }
+        })
     }
   return (
     <Grid container overflow={'auto'} >
@@ -69,21 +88,22 @@ const EmployerLogin = () => {
                         
                         mt: 5,
                         mx: 4,
-                    
-            }}/>
-            <TextField id='password' label='Password' value={password} onChange={(e)=>{setPassword(e.target.value)}} type='password' variant='outlined' size='small' sx={{
                         
-                        mt: 2.5,
-                        mx: 4,
-                    
-            }}/>
-                <Button variant='contained' type='submit' size='small' sx={{
-                        mt: 3,
-                        mx: 4,
-                        fontWeight: 500,
-                        backgroundColor: theme.palette.primary.darker,
-                }}>Log In</Button>
-            </form>:<form onSubmit={handleSignup} style={{display:'flex',flexDirection:'column'}}> <Typography variant="h4" mt={10} ml={4} fontSize={25} fontWeight={600} color={theme.typography.heading1} >Sign Up</Typography>
+                }}/>
+                <TextField id='password' label='Password' value={password} onChange={(e)=>{setPassword(e.target.value)}} type='password' variant='outlined' size='small' sx={{
+                            
+                            mt: 2.5,
+                            mx: 4,
+                        
+                }}/>
+                    <Button variant='contained' type='submit' size='small' sx={{
+                            mt: 3,
+                            mx: 4,
+                            fontWeight: 500,
+                            backgroundColor: theme.palette.primary.darker,
+                    }}>Log In</Button>
+            </form>:
+            <form onSubmit={handleSignup} style={{display:'flex',flexDirection:'column'}}> <Typography variant="h4" mt={10} ml={4} fontSize={25} fontWeight={600} color={theme.typography.heading1} >Sign Up</Typography>
                     <TextField id='email' value={email} onChange={(e)=>{setEmail(e.target.value)}}  label='Email' variant='outlined' size='small' sx={{
                         
                         mt: 5,
@@ -117,8 +137,7 @@ const EmployerLogin = () => {
 
         { login?<Typography variant="body2" mt={6} textAlign={'center'} fontSize={18} fontWeight={400} >Don't have an account?<span style={{ color:theme.palette.primary.darker , fontWeight:500, cursor:'pointer', wordWrap:'break-word',maxWidth:'full' }} onClick={()=>{setLogin(!login)}}> Sign Up </span> </Typography>:
         <Typography variant="body2" mt={6} textAlign={'center'} fontSize={18} fontWeight={400} >Already have an account?<span style={{ color:theme.palette.primary.darker , fontWeight:500, cursor:'pointer', wordWrap:'break-word',maxWidth:'full' }} onClick={()=>{setLogin(!login)}}> Log In </span> </Typography>}
-           
-
+           <Typography variant="body2" fontSize={20} textAlign={'center'} mt={6} color={'red'}>{loginError}</Typography>
         </Grid>
         
     </Grid>

@@ -1,4 +1,4 @@
-import React from 'react';
+import {useEffect, useState, React} from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,10 +7,22 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import theme from '../theme';
-
+import { fetchApplicants } from '../services/Applicants';
 
 const CustomTable = ({data}) => {
-
+  const [applicants, setApplicants] = useState(null);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+      setLoading(true);
+      fetchApplicants('Cmmm4zvXxrFt74x1CtdQ').then((res) => {
+          setApplicants(res);
+      });
+  }, []);
+  useEffect(() => {
+      if (applicants) {
+          setLoading(false);
+      }
+  }, [applicants]);
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -23,12 +35,12 @@ const CustomTable = ({data}) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, index) => (
+          {applicants && Array.isArray(applicants) && applicants.map((row, index) => (
             <TableRow key={index}>
-              <TableCell>{row.candidateName}</TableCell>
-              <TableCell>{row.applicationStatus}</TableCell>
-              <TableCell>{row.appliedRole}</TableCell>
-              <TableCell>{row.applicationDate}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.appliedDate.toDate().toDateString()}</TableCell>
+              <TableCell>{row.email}</TableCell>
+              <TableCell>{row.contactNumber}</TableCell>
             </TableRow>
           ))}
         </TableBody>
