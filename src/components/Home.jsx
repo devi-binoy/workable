@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -27,22 +27,54 @@ import {
 } from "@mui/icons-material";
 import theme from "../theme";
 import JobCard from "./JobCard";
-import companyLogo from "../assets/companyLogo.png";
 import NavBar from "./NavBar";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 function Home() {
-  const jobs = [
-    {
-      companyLogo: companyLogo,
-      title: "Job Title 1",
-      description:
-        "Lorem ipsum dolor sit amet. Ad perferendis nihil ut quia magni sit voluptatibus totam non libero rerum qui eveniet neque ut totam ipsa. Quo dolores aliquam et natus consectetur et placeat provident ut nulla internos quo architecto vitae ut perferendis omnis non quos minus!",
-      disabilities: ["Disability 1", "Disability 2", "Disability 3"],
-      jobTypes: ["Remote", "Contractual", "Entry-Level"],
-    },
-  ];
 
+  const [jobs, setJobs] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const [disabilityCategories, setDisabilityCategories] = useState([]);
+  const [selectedDisability, setSelectedDisability] = useState('');
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const jobListingsRef = collection(db, "joblistings");
+      const snapshot = await getDocs(jobListingsRef);
+      const jobsData = [];
+      snapshot.forEach((doc) => {
+        jobsData.push(doc.data());
+      });
+      const disabilityCategories = Array.from(
+        new Set(jobsData.flatMap((job) => job.disabilityCategory))
+      );
+      setJobs(jobsData);
+      setDisabilityCategories(disabilityCategories);
+    };
+
+    fetchJobs();
+  }, []);
+
+  const handleDropdownChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedDisability(selectedValue);
+    const databaseRef = firebase.database().ref("jobs");
+    databaseRef
+      .orderByChild("disability")
+      .equalTo(selectedValue)
+      .once("value")
+      .then((snapshot) => {
+        const jobsData = [];
+        snapshot.forEach((childSnapshot) => {
+          jobsData.push(childSnapshot.val());
+        });
+        console.log(jobsData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const handleApplyFilters = () => {
     setOpenDialog(false);
@@ -116,10 +148,14 @@ function Home() {
             width: { xs: 280, sm: 300, md: 300 },
             background: "white",
           }}
+          value={selectedDisability}
+          onChange={handleDropdownChange}
         >
-          <MenuItem value="disability1">Disability 1</MenuItem>
-          <MenuItem value="disability2">Disability 2</MenuItem>
-          <MenuItem value="disability3">Disability 3</MenuItem>
+          {disabilityCategories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
         </TextField>
         <TextField
           label="Location"
@@ -234,14 +270,8 @@ function Home() {
                 justifyContent: "space-between",
               }}
             >
-              {jobs.map((job, index) => (
-                <JobCard key={index} {...job} />
-              ))}
-              {jobs.map((job, index) => (
-                <JobCard key={index} {...job} />
-              ))}
-              {jobs.map((job, index) => (
-                <JobCard key={index} {...job} />
+              {jobs.slice(0, 3).map((job, index) => (
+                <JobCard key={index} job={job} />
               ))}
             </Box>
 
@@ -444,8 +474,7 @@ function Home() {
                   }
                 />
                 <FormControlLabel
-                                sx={{ marginBottom: "2px" }}
-
+                  sx={{ marginBottom: "2px" }}
                   control={
                     <Checkbox
                       size="small"
@@ -514,8 +543,7 @@ function Home() {
                   }
                 />
                 <FormControlLabel
-                                sx={{ marginBottom: "2px" }}
-
+                  sx={{ marginBottom: "2px" }}
                   control={
                     <Checkbox
                       size="small"

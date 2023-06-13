@@ -28,10 +28,9 @@ const JobCard = ({ job }) => {
     userid,
     JobLocation,
     applicationStatus,
+    companylogo
   } = job;
-  
-  const companyLogo = "../assets/images/CompanyLogo.png";
-  
+
   return (
     <Card
       sx={{
@@ -48,20 +47,33 @@ const JobCard = ({ job }) => {
         <Box
           display="flex"
           flexDirection={{ xs: "column", md: "row", sm: "row" }}
-          alignItems="center"
+          alignItems={{ xs: "center", sm: "flex-start" }}
           justifyContent={{ xs: "center", sm: "flex-start" }}
         >
-          <img
-            src={companyLogo}
-            alt="Company Logo"
-            style={{
-              width: "5rem",
-              height: "5rem",
-              marginRight: "1rem",
-              alignSelf: "center",
+          <Box
+            sx={{
+              marginRight: { xs: 0, sm: "1rem" }, // Remove margin on smaller screens
+              marginBottom: { xs: "1rem", sm: 0 }, // Add margin bottom on smaller screens
+              alignSelf: { xs: "center", sm: "flex-start" }, // Align to the left on smaller screens
             }}
-          />
-          <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+          >
+            <img
+              src={companylogo}
+              alt="Company Logo"
+              style={{
+                width: "5rem",
+                height: "5rem",
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: 1,
+              marginTop: { xs: "1rem", sm: 0 }, // Add margin top on smaller screens
+            }}
+          >
             <Box
               display="flex"
               justifyContent="space-between"
@@ -157,17 +169,24 @@ const JobCard = ({ job }) => {
             >
               {jobDescription}
             </Typography>
-            <Box display="flex" alignItems="center" marginTop={1}>
+            <Box
+              display="flex"
+              alignItems="center"
+              marginTop={1}
+              sx={{
+                flexWrap: "wrap", // Allow chips to wrap to the next line
+                gap: "0.5rem", // Add gap between chips
+                marginLeft: { xs: 0, sm: "3rem" }, // Add margin left on smaller screens
+              }}
+            >
               {Array.isArray(disabilityCategory) &&
                 disabilityCategory.map((disability, index) => (
                   <Chip
                     key={index}
                     label={disability}
                     sx={{
-                      marginRight: "0.5rem",
                       backgroundColor: "#CAFFCF",
                       borderRadius: 3,
-                      // Rest of the styles...
                     }}
                   />
                 ))}
@@ -203,7 +222,7 @@ const JobCard = ({ job }) => {
                   },
                 }}
               >
-                {JobType} | {JobLocation} | {NumberofOpenings} Openings | {SalaryRange} | {experience}
+                {JobType} | {JobLocation} | {NumberofOpenings} | ₹{SalaryRange} | {experience}
               </Typography>
             </Box>
           </Box>
