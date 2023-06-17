@@ -30,6 +30,7 @@ import JobCard from "./JobCard";
 import NavBar from "./NavBar";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import { fetchJobListings } from "../services/Home";
 
 function Home() {
 
@@ -37,6 +38,20 @@ function Home() {
   const [openDialog, setOpenDialog] = useState(false);
   const [disabilityCategories, setDisabilityCategories] = useState([]);
   const [selectedDisability, setSelectedDisability] = useState('');
+  const queryobjfromfilters = [
+    {
+        field: "experience",
+        operator: "==",
+        value: "5+ years"
+    
+     },
+ {
+    field: "workMode",
+    operator: "==",
+    value: "Hybrid"
+ }
+
+]
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -54,6 +69,7 @@ function Home() {
     };
 
     fetchJobs();
+    fetchJobListings(queryobjfromfilters);
   }, []);
 
   const handleDropdownChange = (event) => {

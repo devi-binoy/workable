@@ -14,6 +14,7 @@ import CompanyForm from "./components/CompanyForm";
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import NavBar from './components/NavBar';
+import Home from './components/Home';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/candidatetable" element={<CandidateTable/>} />
         <Route path="/companyform" element={<CompanyForm />} />
         <Route path="/jobform" element={<JobForm />} />
+        <Route path ="/home" element={<Home/>}/>
       </Routes>
       </ProtectedRoutes>
     </Router>
