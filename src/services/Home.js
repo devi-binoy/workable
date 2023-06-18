@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 
 const ref = collection(db, "joblistings");
-const pageLimit = 4;
+const pageLimit = 5;
 
 export const fetchJobListings = async (queryobjfromfilters) => {
   const mapqueryobjtoquery = queryobjfromfilters.map((queryobj) =>
@@ -54,15 +54,24 @@ export const fetchInitialPage = async () => {
   };
 };
 
-export const fetchNextPage = async (lastDocument) => {
-  const querySnapshot = await getDocs(
-    query(
-      ref,
-      orderBy("posted_date", "desc"),
-      startAfter(lastDocument),
-      limit(pageLimit)
-    )
+export const fetchNextPage = async (lastDocument, filterConditions) => {
+  let queryRef = query(
+    ref,
+    orderBy("posted_date", "desc"),
+    startAfter(lastDocument),
+    limit(pageLimit)
   );
+
+  if (filterConditions && filterConditions.length > 0) {
+    filterConditions.forEach((filter) => {
+      queryRef = query(
+        queryRef,
+        where(filter.field, filter.operator, filter.value)
+      );
+    });
+  }
+
+  const querySnapshot = await getDocs(queryRef);
   const jobListings = querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -76,19 +85,31 @@ export const fetchNextPage = async (lastDocument) => {
   };
 };
 
-export const fetchSortedJobListings = async (sortBy) => {
+
+export const fetchSortedJobListings = async (sortBy, filterConditions) => {
   let orderByField = "posted_date";
 
   if (sortBy === "salary") {
     orderByField = "SalaryRange";
   } else if (sortBy === "openings") {
-    orderByField = "NumberOfOpenings";
+    orderByField = "NumberofOpenings";
+  }
+
+  let queryRef = query(ref, orderBy(orderByField, "desc"), limit(pageLimit));
+
+  if (filterConditions && filterConditions.length > 0) {
+    filterConditions.forEach((filter) => {
+      queryRef = query(
+        ref,
+        where(filter.field, filter.operator, filter.value),
+        orderBy(orderByField, "desc"),
+        limit(pageLimit)
+      );
+    });
   }
 
   try {
-    const querySnapshot = await getDocs(
-      query(ref, orderBy(orderByField, "desc"), limit(pageLimit))
-    );
+    const querySnapshot = await getDocs(queryRef);
 
     const jobListings = querySnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -99,7 +120,7 @@ export const fetchSortedJobListings = async (sortBy) => {
 
     return {
       jobListings,
-      lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1],
+      lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1]?.data(),
     };
   } catch (error) {
     console.error("Error fetching sorted job listings:", error);
@@ -109,6 +130,10 @@ export const fetchSortedJobListings = async (sortBy) => {
     };
   }
 };
+
+
+
+
 
 export const fetchTotalCount = async () => {
   const q = query(ref);

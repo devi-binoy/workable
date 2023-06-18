@@ -25,18 +25,20 @@ import {
   FilterList,
   LocationOnOutlined,
   SearchOutlined,
+  ClearOutlined,
 } from "@mui/icons-material";
 import theme from "../theme";
 import JobCard from "./JobCard";
 import NavBar from "./NavBar";
 import { UserAuth } from "../context/AuthContext";
-import { Timestamp } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
+import { db } from "../firebase";
 import {
   fetchJobListings,
   fetchInitialPage,
   fetchNextPage,
   fetchSortedJobListings,
-  fetchTotalCount
+  fetchTotalCount,
 } from "../services/Home";
 
 function Home() {
@@ -55,6 +57,7 @@ function Home() {
   const [keyword, setKeyword] = useState("");
   const [sortBy, setSortBy] = useState("");
   const navigate = useNavigate();
+  const [filterConditions, setFilterConditions] = useState([]);
   const { user } = UserAuth();
 
   const disabilityCategories = [
@@ -85,26 +88,21 @@ function Home() {
       setJobListings(joblistings);
       setLastVisible(lastVisible);
     };
-    const fetchData = async () => {
-      try {
-        const count = await fetchTotalCount();
-        setTotalCount(count);
-        await fetchInitialListings();
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+    const fetchCount = async () => {
+      const count = await fetchTotalCount();
+      setTotalCount(count);
     };
-  
-    fetchData();
+
+    fetchInitialListings();
+    fetchCount();
   }, []);
-  
 
   const loadNextPage = async () => {
     if (lastVisible) {
       const {
         jobListings: nextPageListings,
         lastVisible: nextPageLastVisible,
-      } = await fetchNextPage(lastVisible);
+      } = await fetchNextPage(lastVisible, filterConditions); 
       setJobListings((prevListings) => [...prevListings, ...nextPageListings]);
       setLastVisible(nextPageLastVisible);
       setHasMore(nextPageListings.length > 0);
@@ -128,6 +126,14 @@ function Home() {
         field: "JobType",
         operator: "==",
         value: jobType,
+      });
+    }
+
+    if (experience) {
+      filterConditions.push({
+        field: "Experience",
+        operator: "==",
+        value: experience,
       });
     }
 
@@ -184,10 +190,30 @@ function Home() {
         value: keyword,
       });
     }
-    console.log("Filter Conditions", filterConditions);
+    setFilterConditions(filterConditions);
     const jobData = await fetchJobListings(filterConditions);
     setJobListings(jobData.joblistings);
     setLastVisible(jobData.lastVisible);
+    setTotalCount(jobData.joblistings.length);
+  };
+
+  const handleReset = async () => {
+    setDisability("");
+    setWorkMode("");
+    setJobType("");
+    setPostedDate("");
+    setExperience("");
+    setSalaryRange("");
+    setLocation("");
+    setKeyword("");
+    setSortBy("");
+    setFilterConditions([]);
+    const { joblistings, lastVisible } = await fetchInitialPage();
+    const count = await fetchTotalCount();
+    setJobListings(joblistings);
+    setLastVisible(lastVisible);
+    setHasMore(true);
+    setTotalCount(count);
   };
 
   const handleSortBy = async (event) => {
@@ -195,12 +221,13 @@ function Home() {
     setSortBy(sortByValue);
 
     try {
-      const jobData = await fetchSortedJobListings(sortByValue);
+      const jobData = await fetchSortedJobListings(sortByValue, filterConditions);
       setJobListings(jobData.jobListings);
       setLastVisible(jobData.lastVisible);
     } catch (error) {
       console.error("Error fetching sorted job listings:", error);
     }
+
   };
 
   const handleJobCardClick = (jobId) => {
@@ -221,7 +248,7 @@ function Home() {
 
   useEffect(() => {
     console.log("kkak", workMode, jobType);
-  }, [workMode, jobType]);
+  }, [workMode, jobType, experience]);
 
   const handleJobTypeChange = (event) => {
     console.log(event.target.value);
@@ -351,6 +378,24 @@ function Home() {
 
         <Button variant="contained" onClick={handleFilters}>
           Search
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleReset}
+          color="inherit"
+          style={{
+            backgroundColor: "transparent",
+            padding: "8px",
+            minWidth: "unset",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+          sx={{
+            fontSize: "0.8rem",
+            textTransform: "none",
+          }}
+        >
+          Reset
         </Button>
       </Box>
 
@@ -570,9 +615,9 @@ function Home() {
                     size="small"
                     sx={{ paddingLeft: "8px", color: "#3AAE45" }}
                     onChange={handleJobTypeChange}
-                    value="Full-time"
+                    value="Full-Time"
                     name="employmentType"
-                    checked={jobType === "Full-time"}
+                    checked={jobType === "Full-Time"}
                   />
                 }
                 label={
@@ -700,75 +745,69 @@ function Home() {
               />
             </FormGroup>
 
-            {/* <Typography
-                variant="subtitle1"
-                sx={{
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                  marginBottom: "-5px",
-                }}
-              >
-                Experience Level
-              </Typography>
-              <FormGroup>
-                <FormControlLabel
-                  sx={{ marginBottom: "-10px" }}
-                  control={
-                    <Radio
-                      size="small"
-                      sx={{ paddingLeft: "8px", color: "#3AAE45" }}
-                    />
-                  }
-                  label={
-                    <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
-                      Entry-Level
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  sx={{ marginBottom: "-10px" }}
-                  control={
-                    <Radio
-                      size="small"
-                      sx={{ paddingLeft: "8px", color: "#3AAE45" }}
-                    />
-                  }
-                  label={
-                    <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
-                      Intermediate
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  sx={{ marginBottom: "-10px" }}
-                  control={
-                    <Radio
-                      size="small"
-                      sx={{ paddingLeft: "8px", color: "#3AAE45" }}
-                    />
-                  }
-                  label={
-                    <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
-                      Mid-Level
-                    </Typography>
-                  }
-                />
-                <FormControlLabel
-                  sx={{ marginBottom: "2px" }}
-                  control={
-                    <Radio
-                      size="small"
-                      sx={{ paddingLeft: "8px", color: "#3AAE45" }}
-                    />
-                  }
-                  label={
-                    <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
-                      Senior or Executive Level
-                    </Typography>
-                  }
-                />
-              </FormGroup> */}
-
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontSize: "1rem",
+                fontWeight: "bold",
+                marginBottom: "-5px",
+              }}
+            >
+              Experience Level
+            </Typography>
+            <FormGroup>
+              <FormControlLabel
+                sx={{ marginBottom: "-10px" }}
+                control={
+                  <Radio
+                    size="small"
+                    sx={{ paddingLeft: "8px", color: "#3AAE45" }}
+                    checked={experience === "0-1 years"}
+                    onChange={handleExperienceChange}
+                    value="0-1 years"
+                  />
+                }
+                label={
+                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                    0-1 years
+                  </Typography>
+                }
+              />
+              <FormControlLabel
+                sx={{ marginBottom: "-10px" }}
+                control={
+                  <Radio
+                    size="small"
+                    sx={{ paddingLeft: "8px", color: "#3AAE45" }}
+                    checked={experience === "2-4 years"}
+                    onChange={handleExperienceChange}
+                    value="2-4 years"
+                  />
+                }
+                label={
+                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                    2-4 years
+                  </Typography>
+                }
+              />
+              <FormControlLabel
+                sx={{ marginBottom: "2px" }}
+                control={
+                  <Radio
+                    size="small"
+                    sx={{ paddingLeft: "8px", color: "#3AAE45" }}
+                    checked={experience === "5+ years"}
+                    onChange={handleExperienceChange}
+                    value="5+ years"
+                  />
+                }
+                label={
+                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                    5+ years
+                  </Typography>
+                }
+              />
+            </FormGroup>
             <Typography
               variant="subtitle1"
               sx={{
