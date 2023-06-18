@@ -7,6 +7,7 @@ import {
   where,
   limit,
   startAfter,
+  getCountFromServer,
 } from "firebase/firestore";
 
 const ref = collection(db, "joblistings");
@@ -107,4 +108,10 @@ export const fetchSortedJobListings = async (sortBy) => {
       lastVisible: null,
     };
   }
+};
+
+export const fetchTotalCount = async () => {
+  const q = query(ref);
+  const snapshot = await getCountFromServer(q);
+  return snapshot.data().count;
 };

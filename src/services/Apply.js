@@ -1,11 +1,34 @@
 import { db } from "../firebase";
-import { doc, collection, addDoc, serverTimestamp, updateDoc, query, where, getDocs, getDoc} from "firebase/firestore";
+import {
+  doc,
+  collection,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  limit,
+} from "firebase/firestore";
 import { increment } from "firebase/firestore";
 
-export const apply = async (data) => {
-  const applicantsCollectionRef = collection(db, "applicants");
-  await addDoc(applicantsCollectionRef, {
-    userid: data.userid,
+export const apply = async (data, userid) => {
+  const joblistingRef = doc(db, "joblistings", data.joblistingId);
+
+  const joblistingSnapshot = await getDoc(joblistingRef);
+  const joblistingData = joblistingSnapshot.data();
+
+  const isDisabilityIncluded = data.disabilityCategory.every(disability => joblistingData.disabilityCategory.includes(disability));
+
+  if (!isDisabilityIncluded) {
+    console.log("Person's disabilities are not included in the job listing's disabilityCategory field");
+    return false;
+  }
+
+  const docRef = doc(db, "applicants", userid);
+  await addDoc(docRef, {
+    userid: userid,
     joblistingId: data.joblistingId,
     name: data.name,
     dob: data.dob,
@@ -17,18 +40,14 @@ export const apply = async (data) => {
     address: data.address,
     experience: data.experience,
     qualification: data.qualification,
-    coverLetter: data.coverLetter,
-    applied_date: serverTimestamp(), 
-    status: "Applied",
   })
-    .then((docRef) => {
+    .then(() => {
       console.log("Document written with ID: ", docRef.id);
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
 
-  const joblistingRef = doc(db, "joblistings", data.joblistingId);
   await updateDoc(joblistingRef, {
     numberofapplicants: increment(1),
   })
@@ -38,26 +57,46 @@ export const apply = async (data) => {
     .catch((error) => {
       console.error("Error updating number of applicants: ", error);
     });
+
+  return true;
 };
 
 export const getApplied = async (userid) => {
   try {
-    const applicantsQuery = query(collection(db, "applicants"), where("userid", "==", userid));
+    const applicantsQuery = query(
+      collection(db, "applicants"),
+      where("userid", "==", userid)
+    );
     const applicantSnapshot = await getDocs(applicantsQuery);
 
     const joblistingIds = [];
+    const applicationSnapshots = [];
 
     applicantSnapshot.forEach((doc) => {
       const { joblistingId } = doc.data();
       joblistingIds.push(joblistingId);
+      applicationSnapshots.push(getDocs(query(
+        collection(db, "applicants"),
+        where("joblistingId", "==", joblistingId),
+        limit(1)
+      )));
     });
 
     const jobDetails = [];
 
-    for (const joblistingId of joblistingIds) {
+    const applicationResults = await Promise.all(applicationSnapshots);
+
+    for (let i = 0; i < joblistingIds.length; i++) {
+      const joblistingId = joblistingIds[i];
       const joblistingDoc = await getDoc(doc(db, "joblistings", joblistingId));
       if (joblistingDoc.exists()) {
         const jobData = joblistingDoc.data();
+        const applicationSnapshot = applicationResults[i];
+        if (!applicationSnapshot.empty) {
+          const applicationDoc = applicationSnapshot.docs[0];
+          const { status } = applicationDoc.data();
+          jobData.status = status;
+        }
         jobDetails.push(jobData);
       }
     }

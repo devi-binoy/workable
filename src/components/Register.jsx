@@ -6,6 +6,8 @@ import {
   Typography,
   MenuItem,
   Box,
+  InputLabel,
+  Select
 } from "@mui/material";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
@@ -83,8 +85,8 @@ const Register = () => {
             },
           }}
         >
-          Join Our <span style={{ color: "#419D4A" }}>Inclusive </span>{" "}
-          Workforce.
+          Unlock your potential in an <span style={{ color: "#419D4A" }}>Inclusive </span>{" "}
+          Community.
         </Typography>
         <Typography
           variant="subtitle1"
@@ -241,13 +243,21 @@ const Register = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Experience"
+            <InputLabel id="experience-label">Experience</InputLabel>
+            <Select
+              labelId="experience-label"
+              value={experience}
               onChange={(e) => setExperience(e.target.value)}
               fullWidth
-              margin="normal"
               variant="outlined"
-            />
+              required
+              displayEmpty
+            >
+              <MenuItem value="">Select Experience</MenuItem>
+              <MenuItem value="0-1 years">0-1 years</MenuItem>
+              <MenuItem value="2-4 years">2-4 years</MenuItem>
+              <MenuItem value="5+ years">5+ years</MenuItem>
+            </Select>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField

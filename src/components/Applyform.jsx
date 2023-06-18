@@ -11,6 +11,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
@@ -39,7 +41,7 @@ const Form = () => {
   const uid = user.uid;
   const location = useLocation();
   const jobid = location.state && location.state.jobId;
-  console.log(jobid); 
+  console.log(jobid);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +67,7 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const details = {
       userid: uid,
       name: name,
@@ -80,10 +83,9 @@ const Form = () => {
       joblistingId: jobid,
       coverLetter: coverLetter,
     };
-    console.log(JSON.stringify(details));
     setIsApplying(true);
-    await apply(details);
-    setIsApplicationSuccessful(true);
+    const isApplicationSuccessful = await apply(details, uid);
+    setIsApplicationSuccessful(isApplicationSuccessful);
     setIsDialogOpen(true);
   };
 
@@ -336,18 +338,21 @@ const Form = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Experience"
+            <InputLabel id="experience-label">Experience</InputLabel>
+            <Select
+              labelId="experience-label"
+              value={experience}
               onChange={(e) => setExperience(e.target.value)}
               fullWidth
-              margin="normal"
               variant="outlined"
               required
-              value={experience}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+              displayEmpty
+            >
+              <MenuItem value="">Select Experience</MenuItem>
+              <MenuItem value="0-1 years">0-1 years</MenuItem>
+              <MenuItem value="2-4 years">2-4 years</MenuItem>
+              <MenuItem value="5+ years">5+ years</MenuItem>
+            </Select>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -364,16 +369,16 @@ const Form = () => {
             />
           </Grid>
           <Grid item xs={12}>
-          <TextField
-            label="Cover Letter"
-            onChange={(e) => setCoverLetter(e.target.value)}
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            multiline
-            rows={4}
-          />
-        </Grid>
+            <TextField
+              label="Cover Letter"
+              onChange={(e) => setCoverLetter(e.target.value)}
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              multiline
+              rows={4}
+            />
+          </Grid>
           <Grid item container justifyContent={"flex-end"} xs={12}>
             <Button variant="contained" color="primary" type="submit">
               {isApplying ? "Applying..." : "Apply"}
@@ -392,7 +397,7 @@ const Form = () => {
           <DialogContentText>
             {isApplicationSuccessful
               ? "Your application has been successfully sent."
-              : "There was an error while submitting your application."}
+              : "You are not eligible for this role. Please check other available jobs."}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
