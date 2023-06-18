@@ -15,20 +15,18 @@ import { increment } from "firebase/firestore";
 
 export const apply = async (data, userid) => {
   const joblistingRef = doc(db, "joblistings", data.joblistingId);
-
   const joblistingSnapshot = await getDoc(joblistingRef);
   const joblistingData = joblistingSnapshot.data();
-
-  const isDisabilityIncluded = data.disabilityCategory.every(disability => joblistingData.disabilityCategory.includes(disability));
-
+  const isDisabilityIncluded = data.disabilityCategory.every((disability) =>
+    joblistingData.disabilityCategory.includes(disability)
+  );
   if (!isDisabilityIncluded) {
-    console.log("Person's disabilities are not included in the job listing's disabilityCategory field");
     return false;
   }
 
-  const docRef = doc(db, "applicants", userid);
-  await addDoc(docRef, {
-    userid: userid,
+  const applicantsCollectionRef = collection(db, "applicants");
+  await addDoc(applicantsCollectionRef, {
+    userid: data.userid,
     joblistingId: data.joblistingId,
     name: data.name,
     dob: data.dob,
@@ -40,8 +38,11 @@ export const apply = async (data, userid) => {
     address: data.address,
     experience: data.experience,
     qualification: data.qualification,
+    coverLetter: data.coverLetter,
+    applied_date: serverTimestamp(),
+    status: "Applied",
   })
-    .then(() => {
+    .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
     })
     .catch((error) => {
@@ -57,7 +58,6 @@ export const apply = async (data, userid) => {
     .catch((error) => {
       console.error("Error updating number of applicants: ", error);
     });
-
   return true;
 };
 
@@ -75,11 +75,15 @@ export const getApplied = async (userid) => {
     applicantSnapshot.forEach((doc) => {
       const { joblistingId } = doc.data();
       joblistingIds.push(joblistingId);
-      applicationSnapshots.push(getDocs(query(
-        collection(db, "applicants"),
-        where("joblistingId", "==", joblistingId),
-        limit(1)
-      )));
+      applicationSnapshots.push(
+        getDocs(
+          query(
+            collection(db, "applicants"),
+            where("joblistingId", "==", joblistingId),
+            limit(1)
+          )
+        )
+      );
     });
 
     const jobDetails = [];
@@ -108,4 +112,3 @@ export const getApplied = async (userid) => {
     return [];
   }
 };
-
