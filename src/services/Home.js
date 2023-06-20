@@ -11,56 +11,69 @@ import {
 } from "firebase/firestore";
 
 const ref = collection(db, "joblistings");
-const pageLimit = 5;
+const pageLimit = 4;
 
-export const fetchJobListings = async (queryobjfromfilters) => {
-  const mapqueryobjtoquery = queryobjfromfilters.map((queryobj) =>
-    where(queryobj.field, queryobj.operator, queryobj.value)
-  );
-  const querytoperform = query(
-    ref,
-    ...mapqueryobjtoquery,
-    orderBy("posted_date", "desc"),
-    limit(pageLimit)
-  );
-  const querySnapshot = await getDocs(querytoperform);
-  const joblistings = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+export const fetchJobListings = async (sortBy, filterConditions) => {
+  let orderByField = "posted_date";
 
-  console.log(joblistings);
+  if (sortBy) {
+    if (sortBy === "salary") {
+      orderByField = "SalaryRange";
+    } else if (sortBy === "openings") {
+      orderByField = "NumberofOpenings";
+    }
+  }
 
-  return {
-    joblistings,
-    lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1],
-  };
+  let queryRef = query(ref, orderBy(orderByField, "desc"));
+  let totalCount = 0;
+
+  if (filterConditions && filterConditions.length > 0) {
+    filterConditions.forEach((filter) => {
+      queryRef = query(
+        queryRef,
+        where(filter.field, filter.operator, filter.value),
+      );
+    });
+  }
+
+  try {
+    totalCount = await fetchTotalCount(queryRef);
+    queryRef = query(queryRef, limit(pageLimit));
+    const querySnapshot = await getDocs(queryRef);
+    const jobListings = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    return {
+      jobListings,
+      lastVisible,
+      totalCount,
+    };
+  } catch (error) {
+    console.error("Error fetching sorted job listings:", error);
+    return {
+      jobListings: [],
+      lastVisible: null,
+      totalCount,
+    };
+  }
 };
 
-export const fetchInitialPage = async () => {
-  const querySnapshot = await getDocs(
-    query(ref, orderBy("posted_date", "desc"), limit(pageLimit))
-  );
-  const joblistings = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+export const fetchNextPage = async (lastVisible, sortBy, filterConditions) => {
+  let orderByField = "posted_date";
 
-  console.log(joblistings);
+  if (sortBy) {
+    if (sortBy === "salary") {
+      orderByField = "SalaryRange";
+    } else if (sortBy === "openings") {
+      orderByField = "NumberofOpenings";
+    }
+  }
 
-  return {
-    joblistings,
-    lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1],
-  };
-};
-
-export const fetchNextPage = async (lastDocument, filterConditions) => {
-  let queryRef = query(
-    ref,
-    orderBy("posted_date", "desc"),
-    startAfter(lastDocument),
-    limit(pageLimit)
-  );
+  let queryRef = query(ref, orderBy(orderByField, "desc"), startAfter(lastVisible), limit(pageLimit));
 
   if (filterConditions && filterConditions.length > 0) {
     filterConditions.forEach((filter) => {
@@ -71,43 +84,7 @@ export const fetchNextPage = async (lastDocument, filterConditions) => {
     });
   }
 
-  const querySnapshot = await getDocs(queryRef);
-  const jobListings = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
-  console.log(jobListings);
-
-  return {
-    jobListings,
-    lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1],
-  };
-};
-
-
-export const fetchSortedJobListings = async (sortBy, filterConditions) => {
-  let orderByField = "posted_date";
-
-  if (sortBy === "salary") {
-    orderByField = "SalaryRange";
-  } else if (sortBy === "openings") {
-    orderByField = "NumberofOpenings";
-  }
-
-  let queryRef = query(ref, orderBy(orderByField, "desc"), limit(pageLimit));
-
-  if (filterConditions && filterConditions.length > 0) {
-    filterConditions.forEach((filter) => {
-      queryRef = query(
-        ref,
-        where(filter.field, filter.operator, filter.value),
-        orderBy(orderByField, "desc"),
-        limit(pageLimit)
-      );
-    });
-  }
-
+  
   try {
     const querySnapshot = await getDocs(queryRef);
 
@@ -116,11 +93,9 @@ export const fetchSortedJobListings = async (sortBy, filterConditions) => {
       ...doc.data(),
     }));
 
-    console.log(jobListings);
-
     return {
       jobListings,
-      lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1]?.data(),
+      lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1],
     };
   } catch (error) {
     console.error("Error fetching sorted job listings:", error);
@@ -131,12 +106,12 @@ export const fetchSortedJobListings = async (sortBy, filterConditions) => {
   }
 };
 
-
-
-
-
-export const fetchTotalCount = async () => {
-  const q = query(ref);
-  const snapshot = await getCountFromServer(q);
-  return snapshot.data().count;
+export const fetchTotalCount = async (queryRef) => {
+  try {
+    const snapshot = await getCountFromServer(queryRef);
+    return snapshot.data().count;
+  } catch (error) {
+    console.error("Error fetching total count:", error);
+    return 0;
+  }
 };

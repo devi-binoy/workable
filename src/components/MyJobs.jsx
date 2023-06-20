@@ -23,38 +23,51 @@ function MyJobs() {
 
   return (
     <>
-    <NavBar />
-    <Box
-      sx={{
-        px: { xs: 2, sm: 4 },
-        pt: 8,
-      }}
-    >
-      <Typography
-        variant="h4"
+      <NavBar />
+      <Box
         sx={{
-          // fontSize: "1.3rem",
-          fontWeight: "600",
-          [theme.breakpoints.down("md")]: {
-            fontSize: "3rem",
-          },
-          [theme.breakpoints.down("sm")]: {
-            fontSize: "1.9rem",
-          },
-          [theme.breakpoints.down("xs")]: {
-            fontSize: "0.9rem",
-          },
-          lineHeight: { xs: "40px", sm: "80px" },
-          textAlign: "center",
-          mb: 2,
+          px: { xs: 2, sm: 4 },
+          pt: 8,
         }}
       >
-        My Jobs List
-      </Typography>
-      {jobs.map((job, index) => (
-        <JobCard job={job} />
-      ))}
-    </Box>
+        <Typography
+              tabIndex={0}
+          variant="h4"
+          sx={{
+            fontWeight: "600",
+            [theme.breakpoints.down("md")]: {
+              fontSize: "3rem",
+            },
+            [theme.breakpoints.down("sm")]: {
+              fontSize: "1.9rem",
+            },
+            [theme.breakpoints.down("xs")]: {
+              fontSize: "0.9rem",
+            },
+            lineHeight: { xs: "40px", sm: "80px" },
+            textAlign: "center",
+            mb: 2,
+          }}
+        >
+          My Jobs List
+        </Typography>
+        {jobs.length === 0 ? (
+          <Typography
+              tabIndex={0}
+            variant="body1"
+            sx={{
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textAlign: "center",
+              mb: 2,
+            }}
+          >
+            You haven't applied to any jobs yet.
+          </Typography>
+        ) : (
+          jobs.map((job, index) => <JobCard job={job} key={index} />)
+        )}
+      </Box>
     </>
   );
 }

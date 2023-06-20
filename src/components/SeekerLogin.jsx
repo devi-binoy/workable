@@ -13,6 +13,7 @@ const SeekerLogin = () => {
   const [password, setPassword] = useState("");
   const { createUser, loginUser, loginGoogle } = UserAuth();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -20,18 +21,17 @@ const SeekerLogin = () => {
       await createUser(email, password);
       navigate("/register");
     } catch (err) {
-      console.log(err.code);
+      setErrorMessage(err.message);
     }
   };
 
   const handleLogin = async (e) => {
-    debugger;
     e.preventDefault();
     try {
       await loginUser(email, password);
       navigate("/");
     } catch (err) {
-      console.log(err.code);
+      setErrorMessage(err.message);
     }
   };
 
@@ -41,7 +41,7 @@ const SeekerLogin = () => {
       await loginGoogle();
       navigate("/");
     } catch (err) {
-      console.log(err.code);
+      setErrorMessage(err.message);
     }
   };
 
@@ -131,7 +131,19 @@ const SeekerLogin = () => {
             >
               Log In
             </Button>
-          </form>
+            {errorMessage && (
+            <Typography
+              variant="body2"
+              color="error"
+              mt={2}
+              ml={4}
+              fontSize={14}
+              fontWeight={400}
+            >
+              {errorMessage}
+            </Typography>
+          )}
+        </form>
         ) : (
           <form
             onSubmit={handleSignup}
@@ -185,6 +197,18 @@ const SeekerLogin = () => {
             >
               Sign Up
             </Button>
+            {errorMessage && (
+            <Typography
+              variant="body2"
+              color="error"
+              mt={2}
+              ml={4}
+              fontSize={14}
+              fontWeight={400}
+            >
+              {errorMessage}
+            </Typography>
+          )}
           </form>
         )}
 

@@ -108,6 +108,7 @@ const Form = () => {
         }}
       >
         <Typography
+              tabIndex={0}
           variant="heading1"
           sx={{
             fontWeight: "bold",
@@ -129,6 +130,7 @@ const Form = () => {
           Workforce.
         </Typography>
         <Typography
+              tabIndex={0}
           variant="subtitle1"
           fontSize={{ xs: "0.rem", sm: "0.75rem", md: "0.85rem", lg: "1rem" }}
           sx={{ color: "#767676", lineHeight: "1.5rem" }}

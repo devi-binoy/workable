@@ -13,6 +13,7 @@ const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
 
   const createUser = (email, password) => {
     return new Promise((resolve, reject) => {
@@ -48,7 +49,6 @@ export const AuthContextProvider = ({ children }) => {
               if (docSnap.exists()) {
                 const userData = docSnap.data();
                 console.log(userData.email);
-                // Here, you can set the retrieved user data to state or perform any other necessary actions.
               }
 
               resolve(true);
@@ -90,14 +90,20 @@ export const AuthContextProvider = ({ children }) => {
       });
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
+   useEffect(() => {
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        if (user) {
+          setUser(user);
+        } else {
+          setUser(null);
+        }
+      },
+      (error) => {
+        setErrorMessage(error.message);
       }
-    });
+    );
   }, []);
 
   return (

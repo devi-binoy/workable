@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Button, Typography } from "@mui/material";
 import { Avatar } from "@mui/material";
-import companyLogo from "../assets/companyLogo.png";
 import theme from "../theme";
 import NavBar from "./NavBar";
 import { useLocation } from "react-router-dom";
 import { fetchJobDetails } from "../services/Job";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function JobPost() {
   const location = useLocation();
@@ -20,6 +19,7 @@ function JobPost() {
     const fetchJobData = async () => {
       try {
         const data = await fetchJobDetails(jobId);
+        console.log("Job DATA:", data);
         setJobData(data);
       } catch (error) {
         console.error("Error fetching job details:", error);
@@ -28,7 +28,6 @@ function JobPost() {
 
     if (jobId) {
       fetchJobData();
-      console.log("Job details", jobData);
     }
   }, [jobId]);
 
@@ -40,7 +39,7 @@ function JobPost() {
     if (user) {
       navigate("/apply", { state: { jobId } });
     } else {
-      navigate("/login"); 
+      navigate("/login");
     }
   };
 
@@ -69,7 +68,7 @@ function JobPost() {
         <Avatar
           variant="square"
           alt="Company Logo"
-          src={companyLogo}
+          src={jobData.companylogo}
           xs={6}
           sx={{
             width: "9rem",
@@ -104,6 +103,7 @@ function JobPost() {
         }}
       >
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{
@@ -123,6 +123,7 @@ function JobPost() {
           {jobData.companyname}
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -139,7 +140,7 @@ function JobPost() {
             },
           }}
         >
-          {jobData.jobTitle}
+          {jobData.JobTitle}
         </Typography>
       </Grid>
       <Button
@@ -196,6 +197,7 @@ function JobPost() {
         }}
       >
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{
@@ -206,10 +208,11 @@ function JobPost() {
         >
           {" "}
           Posted on {jobData.posted_date?.toDate().toString()} •{" "}
-          {jobData.numberofapplicants} Applicants • {jobData.NumberOfOpenings}{" "}
+          {jobData.numberofapplicants} Applicants • {jobData.NumberofOpenings}{" "}
           Openings{" "}
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -224,6 +227,7 @@ function JobPost() {
           Job Description
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{
@@ -235,6 +239,7 @@ function JobPost() {
           {jobData.jobDescription}
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -260,6 +265,7 @@ function JobPost() {
           Array.isArray(jobData.disabilityCategory) ? (
             jobData.disabilityCategory.map((disability, index) => (
               <Typography
+              tabIndex={0}
                 key={index}
                 sx={{
                   backgroundColor: "secondary.main",
@@ -280,10 +286,12 @@ function JobPost() {
               </Typography>
             ))
           ) : (
-            <Typography>..</Typography>
+            <Typography
+              tabIndex={0}>..</Typography>
           )}
         </Grid>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -298,6 +306,7 @@ function JobPost() {
           Job Location
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{
@@ -309,6 +318,7 @@ function JobPost() {
           {jobData.JobLocation}
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -323,6 +333,7 @@ function JobPost() {
           Experience Level
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{
@@ -334,6 +345,7 @@ function JobPost() {
           {jobData.experience}
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -348,6 +360,7 @@ function JobPost() {
           Qualification Level
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{
@@ -359,6 +372,7 @@ function JobPost() {
           {jobData.qualification}
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
@@ -373,6 +387,7 @@ function JobPost() {
           Salary
         </Typography>
         <Typography
+              tabIndex={0}
           lg={12}
           variant="heading2"
           sx={{

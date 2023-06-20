@@ -25,21 +25,16 @@ import {
   FilterList,
   LocationOnOutlined,
   SearchOutlined,
-  ClearOutlined,
 } from "@mui/icons-material";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import { visuallyHidden } from "@mui/utils";
 import theme from "../theme";
 import JobCard from "./JobCard";
 import NavBar from "./NavBar";
 import { UserAuth } from "../context/AuthContext";
 import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import {
-  fetchJobListings,
-  fetchInitialPage,
-  fetchNextPage,
-  fetchSortedJobListings,
-  fetchTotalCount,
-} from "../services/Home";
+import { fetchJobListings, fetchNextPage } from "../services/Home";
 
 function Home() {
   const [jobListings, setJobListings] = useState([]);
@@ -52,7 +47,7 @@ function Home() {
   const [jobType, setJobType] = useState("");
   const [postedDate, setPostedDate] = useState("");
   const [experience, setExperience] = useState("");
-  const [salaryRange, setSalaryRange] = useState("");
+  const [salaryRange, setSalaryRange] = useState(0);
   const [location, setLocation] = useState("");
   const [keyword, setKeyword] = useState("");
   const [sortBy, setSortBy] = useState("");
@@ -84,17 +79,12 @@ function Home() {
 
   useEffect(() => {
     const fetchInitialListings = async () => {
-      const { joblistings, lastVisible } = await fetchInitialPage();
-      setJobListings(joblistings);
+      const { jobListings, lastVisible, totalCount } = await fetchJobListings();
+      setTotalCount(totalCount);
+      setJobListings(jobListings);
       setLastVisible(lastVisible);
     };
-    const fetchCount = async () => {
-      const count = await fetchTotalCount();
-      setTotalCount(count);
-    };
-
     fetchInitialListings();
-    fetchCount();
   }, []);
 
   const loadNextPage = async () => {
@@ -102,7 +92,7 @@ function Home() {
       const {
         jobListings: nextPageListings,
         lastVisible: nextPageLastVisible,
-      } = await fetchNextPage(lastVisible, filterConditions); 
+      } = await fetchNextPage(lastVisible, sortBy, filterConditions);
       setJobListings((prevListings) => [...prevListings, ...nextPageListings]);
       setLastVisible(nextPageLastVisible);
       setHasMore(nextPageListings.length > 0);
@@ -131,9 +121,17 @@ function Home() {
 
     if (experience) {
       filterConditions.push({
-        field: "Experience",
+        field: "experience",
         operator: "==",
         value: experience,
+      });
+    }
+
+    if (salaryRange) {
+      filterConditions.push({
+        field: "SalaryRange",
+        operator: ">=",
+        value: salaryRange,
       });
     }
 
@@ -191,10 +189,10 @@ function Home() {
       });
     }
     setFilterConditions(filterConditions);
-    const jobData = await fetchJobListings(filterConditions);
-    setJobListings(jobData.joblistings);
+    const jobData = await fetchJobListings(sortBy, filterConditions);
+    setJobListings(jobData.jobListings);
     setLastVisible(jobData.lastVisible);
-    setTotalCount(jobData.joblistings.length);
+    setTotalCount(jobData.totalCount);
   };
 
   const handleReset = async () => {
@@ -203,17 +201,16 @@ function Home() {
     setJobType("");
     setPostedDate("");
     setExperience("");
-    setSalaryRange("");
+    setSalaryRange(0);
     setLocation("");
     setKeyword("");
     setSortBy("");
     setFilterConditions([]);
-    const { joblistings, lastVisible } = await fetchInitialPage();
-    const count = await fetchTotalCount();
-    setJobListings(joblistings);
+    const { jobListings, lastVisible, totalCount } = await fetchJobListings();
+    setJobListings(jobListings);
     setLastVisible(lastVisible);
     setHasMore(true);
-    setTotalCount(count);
+    setTotalCount(totalCount);
   };
 
   const handleSortBy = async (event) => {
@@ -221,13 +218,13 @@ function Home() {
     setSortBy(sortByValue);
 
     try {
-      const jobData = await fetchSortedJobListings(sortByValue, filterConditions);
+      const jobData = await fetchJobListings(sortBy, filterConditions);
       setJobListings(jobData.jobListings);
       setLastVisible(jobData.lastVisible);
+      setTotalCount(jobData.totalCount);
     } catch (error) {
       console.error("Error fetching sorted job listings:", error);
     }
-
   };
 
   const handleJobCardClick = (jobId) => {
@@ -282,7 +279,8 @@ function Home() {
           overflow: "hidden",
         }}
       >
-        <Typography
+       <Typography
+              tabIndex={0}
           variant="heading1"
           sx={{
             fontWeight: "bold",
@@ -302,7 +300,8 @@ function Home() {
         >
           Find <span style={{ color: "#419D4A" }}>Inclusive</span> Jobs Today
         </Typography>
-        <Typography
+       <Typography
+              tabIndex={0}
           variant="subtitle1"
           fontSize={{ xs: "0.rem", sm: "0.75rem", md: "0.85rem", lg: "1rem" }}
           sx={{ color: "#767676", lineHeight: "1.5rem" }}
@@ -321,24 +320,29 @@ function Home() {
           flexWrap: "wrap",
         }}
       >
-        <TextField
-          id="disability-input"
-          select
-          label="Disability"
-          variant="outlined"
-          sx={{
-            width: { xs: 280, sm: 300, md: 300 },
-            background: "white",
-          }}
-          value={disability}
-          onChange={(e) => setDisability(e.target.value)}
-        >
-          {disabilityCategories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
-            </MenuItem>
-          ))}
-        </TextField>
+       <TextField
+  id="disability-input"
+  select
+  label="Disability"
+  title="Disability Drop Down"
+  variant="outlined"
+  sx={{
+    width: { xs: 280, sm: 300, md: 300 },
+    background: "white",
+  }}
+  value={disability}
+  onChange={(e) => setDisability(e.target.value)}
+  labelId="disability-label"
+  aria-label="Disability Drop Down" 
+>
+  {disabilityCategories.map((category) => (
+    <MenuItem key={category} value={category}>
+      {category}
+    </MenuItem>
+  ))}
+</TextField>
+
+
         <TextField
           id="location-input"
           label="Location"
@@ -375,7 +379,16 @@ function Home() {
             ),
           }}
         />
+      </Box>
 
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "12px",
+          gap: "16px",
+        }}
+      >
         <Button variant="contained" onClick={handleFilters}>
           Search
         </Button>
@@ -389,12 +402,16 @@ function Home() {
             minWidth: "unset",
             border: "1px solid #ccc",
             borderRadius: "4px",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
           }}
           sx={{
             fontSize: "0.8rem",
             textTransform: "none",
           }}
         >
+          <RotateLeftIcon sx={{ fontSize: "1rem" }} />
           Reset
         </Button>
       </Box>
@@ -433,7 +450,7 @@ function Home() {
                   sx={{ padding: "6px", marginLeft: "-8px" }}
                 >
                   <FilterList fontSize="large" />
-                  <Typography
+                 <Typography
                     variant="subtitle1"
                     sx={{
                       marginLeft: "8px",
@@ -446,7 +463,8 @@ function Home() {
                   </Typography>
                 </IconButton>
               </Box>
-              <Typography
+             <Typography
+              tabIndex={0}
                 variant="h6"
                 sx={{
                   fontSize: { xs: "1rem", sm: "1.3rem", md: "1.5rem" },
@@ -458,13 +476,15 @@ function Home() {
                 {totalCount} Jobs
               </Typography>
               <FormControl variant="standard" sx={{ minWidth: "15%" }}>
-                <InputLabel>Sort By</InputLabel>
+                <InputLabel id="sort-by-label">Sort By</InputLabel>
                 <Select
                   labelId="sort-by-label"
+                  label="Sort Options"
                   id="sort-by-select"
                   value={sortBy}
                   onChange={handleSortBy}
-                  label="Sort By"
+                  aria-labelledby="sort-by-label"
+                  aria-describedby="press to sort by most recent, salary or nuber of opernings"
                 >
                   <MenuItem value="recent">Most Recent</MenuItem>
                   <MenuItem value="salary">Salary</MenuItem>
@@ -489,9 +509,9 @@ function Home() {
                     height: "100%",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleJobCardClick(job.id)}
+                  // onClick={() => handleJobCardClick(job.id)}
                 >
-                  <JobCard job={job} />
+                  <JobCard job={job} handleJobCardClick={handleJobCardClick} />
                 </div>
               ))}
             </Box>
@@ -524,7 +544,8 @@ function Home() {
         maxWidth="xs"
       >
         <DialogTitle>
-          <Typography
+         <Typography
+              tabIndex={0}
             variant="h6"
             sx={{ fontSize: "1.5rem", fontWeight: "bold", color: "#359E3F" }}
           >
@@ -533,7 +554,8 @@ function Home() {
         </DialogTitle>
         <DialogContent>
           <FormControl component="fieldset">
-            <Typography
+           <Typography
+              tabIndex={0}
               variant="subtitle1"
               sx={{
                 fontSize: "1rem",
@@ -556,7 +578,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Remote
                   </Typography>
                 }
@@ -573,7 +596,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     On Site
                   </Typography>
                 }
@@ -590,14 +614,16 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Hybrid
                   </Typography>
                 }
               />
             </FormGroup>
 
-            <Typography
+           <Typography
+              tabIndex={0}
               variant="subtitle1"
               sx={{
                 fontSize: "1rem",
@@ -621,7 +647,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Full-Time
                   </Typography>
                 }
@@ -639,7 +666,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Part-Time
                   </Typography>
                 }
@@ -657,14 +685,16 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Contract
                   </Typography>
                 }
               />
             </FormGroup>
 
-            <Typography
+           <Typography
+              tabIndex={0}
               variant="subtitle1"
               sx={{
                 fontSize: "1rem",
@@ -687,7 +717,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     All Time
                   </Typography>
                 }
@@ -704,7 +735,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Last 24 hours
                   </Typography>
                 }
@@ -721,7 +753,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Last 7 days
                   </Typography>
                 }
@@ -738,14 +771,16 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     Last month
                   </Typography>
                 }
               />
             </FormGroup>
 
-            <Typography
+           <Typography
+              tabIndex={0}
               variant="subtitle1"
               sx={{
                 fontSize: "1rem",
@@ -768,7 +803,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     0-1 years
                   </Typography>
                 }
@@ -785,7 +821,8 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     2-4 years
                   </Typography>
                 }
@@ -802,13 +839,15 @@ function Home() {
                   />
                 }
                 label={
-                  <Typography variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                 <Typography
+              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
                     5+ years
                   </Typography>
                 }
               />
             </FormGroup>
-            <Typography
+           <Typography
+              tabIndex={0}
               variant="subtitle1"
               sx={{
                 fontSize: "1rem",
@@ -818,7 +857,19 @@ function Home() {
             >
               Salary
             </Typography>
-            <Slider defaultValue={1000} aria-label="Salary" />
+            <Slider
+              value={salaryRange}
+              onChange={handleSalaryRangeChange}
+              min={10000}
+              max={1000000}
+              step={10000}
+              marks={[
+                { value: 10000, label: "10k" },
+                { value: 500000, label: "5L" },
+                { value: 1000000, label: "10L" },
+              ]}
+              aria-label="Salary"
+            />
           </FormControl>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "space-between" }}>

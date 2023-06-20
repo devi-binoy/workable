@@ -6,7 +6,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Link,
 } from "react-router-dom/dist";
 import Applyform from "./components/Applyform";
 import Register from "./components/Register";
@@ -15,6 +14,7 @@ import MyJobs from "./components/MyJobs";
 import JobPost from "./components/JobPost";
 import { AuthContextProvider } from "./context/AuthContext";
 import SeekerLogin from "./components/SeekerLogin";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
 
 function App() {
   return (
@@ -23,14 +23,16 @@ function App() {
         <CssBaseline />
         <AuthContextProvider>
           <Router>
+          {/* <ProtectedRoutes> */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<SeekerLogin />} />
-              <Route path="/register" element={<Register/> } />
               <Route path="/job" element={<JobPost />} />
-              <Route path="/apply" element={<Applyform />} />
-              <Route path="/myjobs" element={<MyJobs />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/apply" element={<Applyform />} />
+                <Route path="/myjobs" element={<MyJobs />} />
             </Routes>
+          {/* </ProtectedRoutes> */}
           </Router>
         </AuthContextProvider>
       </ThemeProvider>

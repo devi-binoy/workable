@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, handleJobCardClick }) => {
   const theme = useTheme();
 
   console.log(job);
@@ -27,11 +27,25 @@ const JobCard = ({ job }) => {
     userid,
     JobLocation,
     status,
-    companylogo
+    companylogo,
   } = job;
+
+  const handleClick = () => {
+    handleJobCardClick(job.id);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleJobCardClick(job.id);
+    }
+  };
 
   return (
     <Card
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
       sx={{
         margin: "1.5rem auto",
         borderRadius: "10px",
@@ -40,6 +54,10 @@ const JobCard = ({ job }) => {
           maxWidth: "70%",
         },
         position: "relative",
+        transition: "transform 0.1s",
+        "&:hover": {
+          transform: "scale(1.02)",
+        },
       }}
     >
       <CardContent>
@@ -51,9 +69,9 @@ const JobCard = ({ job }) => {
         >
           <Box
             sx={{
-              marginRight: { xs: 0, sm: "1rem" }, 
-              marginBottom: { xs: "1rem", sm: 0 }, 
-              alignSelf: { xs: "center", sm: "flex-start" }, 
+              marginRight: { xs: 0, sm: "1rem" },
+              marginBottom: { xs: "1rem", sm: 0 },
+              alignSelf: { xs: "center", sm: "flex-start" },
             }}
           >
             <img
@@ -70,7 +88,7 @@ const JobCard = ({ job }) => {
               display: "flex",
               flexDirection: "column",
               flexGrow: 1,
-              marginTop: { xs: "1rem", sm: 0 }, // Add margin top on smaller screens
+              marginTop: { xs: "1rem", sm: 0 },
             }}
           >
             <Box
@@ -173,9 +191,9 @@ const JobCard = ({ job }) => {
               alignItems="center"
               marginTop={1}
               sx={{
-                flexWrap: "wrap", 
-                gap: "0.5rem", 
-                marginLeft: { xs: 0, sm: "3rem" }, 
+                flexWrap: "wrap",
+                gap: "0.5rem",
+                marginLeft: { xs: 0, sm: "3rem" },
               }}
             >
               {Array.isArray(disabilityCategory) &&
@@ -221,7 +239,8 @@ const JobCard = ({ job }) => {
                   },
                 }}
               >
-                {JobType} | {JobLocation} | {NumberofOpenings} | ₹{SalaryRange} | {experience}
+                {JobType} | {JobLocation} | {NumberofOpenings} openings| ₹
+                {SalaryRange} | {experience}
               </Typography>
             </Box>
           </Box>
