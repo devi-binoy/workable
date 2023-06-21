@@ -329,6 +329,9 @@ function Home() {
   sx={{
     width: { xs: 280, sm: 300, md: 300 },
     background: "white",
+    [theme.breakpoints.down("xs")]: {
+      width : 280,      
+    },
   }}
   value={disability}
   onChange={(e) => setDisability(e.target.value)}

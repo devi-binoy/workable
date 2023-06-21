@@ -79,21 +79,23 @@ function JobPost() {
               width: "6rem",
               height: "6rem",
               mt: "0.5rem",
-              ml: "1rem",
-            },
-            [theme.breakpoints.down("xs")]: {
-              width: "4rem",
-              height: "4rem",
-              mt: "0.5rem",
               ml: "0.5rem",
             },
           }}
         />
       </Grid>
+      <Grid container 
+      sx={{
+        flexDirection: "row",
+        width: "75%",  
+        justifyContent: "space-between",
+        [theme.breakpoints.down("md")]: {
+          width: 0,
+          flexDirection: "column",
+        }
+      }}>
       <Grid
         container
-        lg={8}
-        sm={6}
         sx={{
           mt: "1.5rem",
           flexDirection: "column",
@@ -147,7 +149,6 @@ function JobPost() {
         variant="contained"
         sx={{
           mt: "2rem",
-          ml: "2rem",
           fontSize: "1rem",
           height: "2.5rem",
           width: "6rem",
@@ -155,24 +156,19 @@ function JobPost() {
           borderRadius: "10px",
           [theme.breakpoints.down("md")]: {
             fontSize: "0.9rem",
-            mt: "-4.4rem",
-            ml: "12.5rem",
             height: "2rem",
             width: "5rem",
             borderRadius: "5px",
           },
           [theme.breakpoints.down("sm")]: {
+            mt: "0.3rem",
             fontSize: "0.7rem",
-            mt: "-2.4rem",
-            ml: "8.5rem",
             height: "1.6rem",
             width: "5rem",
             borderRadius: "5px",
           },
           [theme.breakpoints.down("xs")]: {
             fontSize: "0.7rem",
-            mt: "-1rem",
-            ml: "6rem",
             height: "1.4rem",
             width: "4rem",
           },
@@ -181,6 +177,7 @@ function JobPost() {
       >
         Apply
       </Button>
+      </Grid>
       <Grid
         container
         lg={12}
