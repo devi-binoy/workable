@@ -67,9 +67,7 @@ const NavBar = () => {
               },
             }}
           >
-            <div class="notranslate">
             WorkAble
-            </div>
           </Button>
 
           {user ? (
