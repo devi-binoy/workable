@@ -5,9 +5,64 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
+    <style type="text/css">
+      #google_translate_element {
+        position: absolute;
+        top:0;
+        right: 10px;
+      }
+      .VIpgJd-ZVi9od-ORHb-OEVmcd{
+       display: none!important;
+      }
+      .goog-logo-link,.gskiptranslate,.goog-te-gadget span,.goog-te-banner-frame,#goog-gt-tt, .goog-te-balloon-frame,div#goog-gt-{
+        display: none!important;
+      }
+      .goog-te-gadget {
+        color: transparent!important;
+        font-size:0px;
+      }
+    
+      .goog-text-highlight {
+        background: none !important;
+        box-shadow: none !important;
+      }
+      .VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc,.VIpgJd-ZVi9od-aZ2wEe-wOHMyf{
+         display: none!important;
+      }
+     /*google translate Dropdown */
+     #google_translate_element select{
+      font-size: large;
+      font-family: 'Inter';
+      background:#ebfbeb;
+      color:#359E3F;
+      border: none;
+      border-radius:3px;
+      padding:6px 8px;
+     }
+     @media screen and (max-width: 600px) {
+      #google_translate_element select{
+        font-size: small;
+       }
+       #google_translate_element{
+        top: -50px;
+       }
+     }
+     </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <div id='google_translate_element'></div>
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'hi,ml,en',
+        autoDisplay: 'true',
+        layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+        }, 'google_translate_element');
+      }
+    </script>
+    <script src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'></script>
   </body>
 </html>
