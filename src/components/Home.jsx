@@ -32,8 +32,7 @@ import theme from "../theme";
 import JobCard from "./JobCard";
 import NavBar from "./NavBar";
 import { UserAuth } from "../context/AuthContext";
-import { collection, getDocs, Timestamp } from "firebase/firestore";
-import { db } from "../firebase";
+import { Timestamp } from "firebase/firestore";
 import { fetchJobListings, fetchNextPage } from "../services/Home";
 
 function Home() {
@@ -279,12 +278,15 @@ function Home() {
           overflow: "hidden",
           [theme.breakpoints.down("md")]: {
             mt: 14,
-          }
+          },
+          [theme.breakpoints.down("xs")]: {
+            marginLeft: "5%",
+          },
         }}
         
       >
-       <Typography
-              tabIndex={0}
+        <Typography
+          tabIndex={0}
           variant="heading1"
           sx={{
             fontWeight: "bold",
@@ -295,52 +297,88 @@ function Home() {
               fontSize: "1.9rem",
             },
             [theme.breakpoints.down("sm")]: {
-              fontSize: "1.75rem",
+              fontSize: "1.5rem",
             },
             [theme.breakpoints.down("xs")]: {
-              fontSize: "1.5rem",
+              fontSize: "1.45rem",
             },
           }}
         >
           Find <span style={{ color: "#419D4A" }}>Inclusive</span> Jobs Today
         </Typography>
-       <Typography
-              tabIndex={0}
+        <Typography
+          tabIndex={0}
           variant="subtitle1"
-          fontSize={{ xs: "0.rem", sm: "0.75rem", md: "0.85rem", lg: "1rem" }}
-          sx={{ color: "#767676", lineHeight: "1.5rem" }}
+          sx={{
+            color: "#767676",
+            lineHeight: "1.5rem",
+            [theme.breakpoints.down("md")]: {
+              fontSize: "1.5rem",
+            },
+            [theme.breakpoints.down("sm")]: {
+              fontSize: "0.9rem",
+            },
+            [theme.breakpoints.down("xs")]: {
+              fontSize: "0.75rem",
+            },
+          }}
         >
           A disability should not hinder you from reaching your full potential
         </Typography>
       </Box>
 
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "16px",
-          marginTop: { xs: "12px", md: "3%" },
-          flexWrap: "wrap",
-        }}
-      >
-       <TextField
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "16px",
+    marginTop: { xs: "12px", md: "3%" },
+    flexWrap: "wrap",
+  }}
+>
+<TextField
   id="disability-input"
   select
   label="Disability"
   title="Disability Drop Down"
   variant="outlined"
   sx={{
-    width: { xs: 280, sm: 300, md: 300 },
-    background: "white",
-    [theme.breakpoints.down("xs")]: {
-      width : 280,      
+    width: { xs: 280, sm: 300 },
+    [theme.breakpoints.down("xs")]:{
+      width: 240
     },
+    background: "white",
   }}
   value={disability}
   onChange={(e) => setDisability(e.target.value)}
   labelId="disability-label"
-  aria-label="Disability Drop Down" 
+  aria-label="Disability Drop Down"
+  InputProps={{
+    style: {
+      height: { xs: 25, sm: 30, md: 25 },
+      padding: { xs: "1px 5px", sm: "1px 8px", md: "1px 10px" },
+      [theme.breakpoints.down("xs")]: {
+        padding: "1px 6px",
+      },
+    },
+  }}
+  
+  SelectProps={{
+    style: {
+      height: { xs: 25, sm: 30, md: 25 },
+      padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
+      [theme.breakpoints.down("xs")]: {
+        padding: "1px 8px",
+      },
+    },
+    MenuProps: {
+      style: {
+        maxHeight: 200,
+      },
+    },
+  }}
+  InputLabelProps={{ shrink: true }}
 >
   {disabilityCategories.map((category) => (
     <MenuItem key={category} value={category}>
@@ -349,44 +387,58 @@ function Home() {
   ))}
 </TextField>
 
+<TextField
+  id="location-input"
+  label="Location"
+  variant="outlined"
+  value={location}
+  onChange={(e) => setLocation(e.target.value)}
+  sx={{
+    width: { xs: 280, sm: 300 },
+    background: "white",
+  }}
+  InputProps={{
+    style: {
+      height: { xs: 25, sm: 30, md: 25 },
+      padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
+      [theme.breakpoints.down("xs")]: {
+        padding: "1px 8px",
+      },
+    },
+    startAdornment: (
+      <InputAdornment position="start">
+        <LocationOnOutlined />
+      </InputAdornment>
+    ),
+  }}
+/>
 
-        <TextField
-          id="location-input"
-          label="Location"
-          variant="outlined"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          sx={{
-            width: { xs: 280, sm: 300 },
-            background: "white",
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LocationOnOutlined />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <TextField
-          id="search-input"
-          label="Search for Jobs"
-          variant="outlined"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          sx={{
-            width: { xs: 280, sm: 300 },
-            background: "white",
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchOutlined />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+
+  <TextField
+    id="search-input"
+    label="Search for Jobs"
+    variant="outlined"
+    value={keyword}
+    onChange={(e) => setKeyword(e.target.value)}
+    sx={{
+      width: { xs: 280, sm: 300 },
+      background: "white",
+    }}
+    InputProps={{
+      style: {
+        // height: { xs: 45, sm: 40, md: 35 },
+        padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" }
+      },
+      startAdornment: (
+        <InputAdornment position="start">
+          <SearchOutlined />
+        </InputAdornment>
+      ),
+    }}
+  />
+</Box>
+
+
 
       <Box
         sx={{
@@ -396,7 +448,20 @@ function Home() {
           gap: "16px",
         }}
       >
-        <Button variant="contained" onClick={handleFilters}>
+        <Button
+          variant="contained"
+          onClick={handleFilters}
+          sx={{
+            fontSize: { xs: "0.8rem", sm: "1rem", md: "1rem" },
+            textTransform: "none",
+            minWidth: "unset",
+            padding: { xs: "6px 12px", sm: "8px 16px", md: "8px 16px" },
+            [theme.breakpoints.down("xs")]: {
+              fontSize: "0.8rem",
+              padding: "6px 12px",
+            },
+          }}
+        >
           Search
         </Button>
         <Button
@@ -414,8 +479,13 @@ function Home() {
             gap: "4px",
           }}
           sx={{
-            fontSize: "0.8rem",
+            fontSize: { xs: "0.8rem", sm: "1rem", md: "1rem" },
             textTransform: "none",
+            padding: { xs: "4px 8px", sm: "6px 12px", md: "6px 12px" },
+            [theme.breakpoints.down("xs")]: {
+              fontSize: "0.8rem",
+              padding: "4px 8px",
+            },
           }}
         >
           <RotateLeftIcon sx={{ fontSize: "1rem" }} />
@@ -457,7 +527,7 @@ function Home() {
                   sx={{ padding: "6px", marginLeft: "-8px" }}
                 >
                   <FilterList fontSize="large" />
-                 <Typography
+                  <Typography
                     variant="subtitle1"
                     sx={{
                       marginLeft: "8px",
@@ -470,8 +540,8 @@ function Home() {
                   </Typography>
                 </IconButton>
               </Box>
-             <Typography
-              tabIndex={0}
+              <Typography
+                tabIndex={0}
                 variant="h6"
                 sx={{
                   fontSize: { xs: "1rem", sm: "1.3rem", md: "1.5rem" },
@@ -528,12 +598,20 @@ function Home() {
                 display: "flex",
                 justifyContent: "center",
                 mt: { xs: 2, sm: 4 },
+                [theme.breakpoints.down("xs")]: {
+                  mt: 2,
+                },
               }}
             >
               {hasMore && (
                 <Button
                   variant="outlined"
-                  sx={{ width: { xs: "100%", sm: "auto" } }}
+                  sx={{
+                    width: { xs: "100%", sm: "auto" },
+                    [theme.breakpoints.down("xs")]: {
+                      width: "40%",
+                    },
+                  }}
                   onClick={loadNextPage}
                 >
                   Load More
@@ -551,8 +629,8 @@ function Home() {
         maxWidth="xs"
       >
         <DialogTitle>
-         <Typography
-              tabIndex={0}
+          <Typography
+            tabIndex={0}
             variant="h6"
             sx={{ fontSize: "1.5rem", fontWeight: "bold", color: "#359E3F" }}
           >
@@ -561,7 +639,7 @@ function Home() {
         </DialogTitle>
         <DialogContent>
           <FormControl component="fieldset">
-           <Typography
+            <Typography
               tabIndex={0}
               variant="subtitle1"
               sx={{
@@ -585,8 +663,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Remote
                   </Typography>
                 }
@@ -603,8 +684,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     On Site
                   </Typography>
                 }
@@ -621,15 +705,18 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Hybrid
                   </Typography>
                 }
               />
             </FormGroup>
 
-           <Typography
+            <Typography
               tabIndex={0}
               variant="subtitle1"
               sx={{
@@ -654,8 +741,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Full-Time
                   </Typography>
                 }
@@ -673,8 +763,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Part-Time
                   </Typography>
                 }
@@ -692,15 +785,18 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Contract
                   </Typography>
                 }
               />
             </FormGroup>
 
-           <Typography
+            <Typography
               tabIndex={0}
               variant="subtitle1"
               sx={{
@@ -724,8 +820,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     All Time
                   </Typography>
                 }
@@ -742,8 +841,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Last 24 hours
                   </Typography>
                 }
@@ -760,8 +862,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Last 7 days
                   </Typography>
                 }
@@ -778,15 +883,18 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     Last month
                   </Typography>
                 }
               />
             </FormGroup>
 
-           <Typography
+            <Typography
               tabIndex={0}
               variant="subtitle1"
               sx={{
@@ -810,8 +918,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     0-1 years
                   </Typography>
                 }
@@ -828,8 +939,11 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     2-4 years
                   </Typography>
                 }
@@ -846,14 +960,17 @@ function Home() {
                   />
                 }
                 label={
-                 <Typography
-              tabIndex={0} variant="heading2" sx={{ fontSize: "0.9rem" }}>
+                  <Typography
+                    tabIndex={0}
+                    variant="heading2"
+                    sx={{ fontSize: "0.9rem" }}
+                  >
                     5+ years
                   </Typography>
                 }
               />
             </FormGroup>
-           <Typography
+            <Typography
               tabIndex={0}
               variant="subtitle1"
               sx={{
