@@ -54,7 +54,7 @@ function JobPost() {
       spacing={3}
       ml= {4}
       mr= {4}
-      mt= {12}
+      mt= {16}
       sx={{
         backgroundColor: "#FFFFFF",
         boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.05)",
@@ -118,7 +118,7 @@ function JobPost() {
             fontWeight: "600",
             [theme.breakpoints.down("md")]: {
               hyphens: "auto",
-              fontSize: "2rem",
+              fontSize: "1.5rem",
             },
             [theme.breakpoints.down("sm")]: {
               fontSize: "1rem",
@@ -132,14 +132,13 @@ function JobPost() {
           lg={12}
           variant="heading1"
           sx={{
-            fontSize: "2.5rem",
             fontWeight: "bold",
             [theme.breakpoints.down("md")]: {
               hyphens: "auto",
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
             },
             [theme.breakpoints.down("sm")]: {
-              fontSize: "1.4rem",
+              fontSize: "1rem",
             }
           }}
         >
