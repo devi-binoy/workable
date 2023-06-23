@@ -228,7 +228,7 @@ function enableHighlightHeadings(load = false) {
         isHighlightHeadings = !isHighlightHeadings;
     }
     if (!isHighlightHeadings) {
-        document.querySelectorAll('h1, h2, h3,heading1').forEach((heading) => {
+        document.querySelectorAll('h1, h2, h3,h4,h5,h6').forEach((heading) => {
             const orgTextDecoration = heading.style['text-decoration'];
             const orgHighlightColor = heading.style['color'];
             heading.setAttribute('data-asw-orgHighlightTextDecoration', orgTextDecoration)
@@ -239,7 +239,7 @@ function enableHighlightHeadings(load = false) {
 
         localStorage.setItem('isHighlightHeadings', 1);
     } else {
-        document.querySelectorAll('h1, h2, h3,heading1').forEach((heading) => {
+        document.querySelectorAll('h1, h2, h3,h4,h5,h6').forEach((heading) => {
             const orgTextDecoration = heading.getAttribute('data-asw-orgHighlightTextDecoration');
             const orgHighlightColor = heading.getAttribute('data-asw-orgHighlightColor');
             if(orgTextDecoration)
@@ -385,6 +385,10 @@ function adjustContrast(load = false) {
             el.style["color"] = '#ffff00';
             el.style["background-color"] = 'black';
             el.style["border-color"] = '#ffff00';
+            if(el.tagName === 'IMG')
+            {
+                el.style["filter"] = 'invert(100%)';
+            }
         });
 
         localStorage.setItem('isContrastEnabled', 1);
@@ -409,6 +413,10 @@ function adjustContrast(load = false) {
                 el.style.borderColor = orgContrastBorderColor;
                 } else {
                 el.style.removeProperty('border-color');
+                }
+                if(el.tagName === 'IMG')
+                {
+                    el.style.removeProperty('filter');
                 }
 
                 el.removeAttribute('data-asw-orgContrastColor');
