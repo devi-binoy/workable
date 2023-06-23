@@ -276,10 +276,14 @@ function Home() {
           marginLeft: { xs: "22px", md: "5%" },
           marginRight: { xs: "22px", md: "5%" },
           overflow: "hidden",
+          [theme.breakpoints.down("md")]: {
+            mt: 14,
+          },
           [theme.breakpoints.down("xs")]: {
             marginLeft: "5%",
           },
         }}
+        
       >
         <Typography
           tabIndex={0}

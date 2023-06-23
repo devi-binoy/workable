@@ -30,9 +30,12 @@ function MyJobs() {
     <>
       <NavBar />
       <Box
+        mt={9}
         sx={{
           px: { xs: 2, sm: 4 },
-          pt: 8,
+          [theme.breakpoints.down("md")]: {
+            mt: 14,
+          }
         }}
       >
         <Typography

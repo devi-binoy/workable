@@ -44,26 +44,28 @@ function JobPost() {
   };
 
   return (
+    <>
+    <NavBar />
     <Grid
       container
       spacing={3}
+      ml= {4}
+      mr= {4}
+      mt= {12}
       sx={{
         backgroundColor: "#FFFFFF",
         boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.05)",
         borderRadius: "9px",
-        mt: "9rem",
-        ml: "2rem",
-        mr: "2rem",
-        mb: "3rem",
         p: "2rem",
+        [theme.breakpoints.down("md")]: {
+          mt: 14,
+        },
         [theme.breakpoints.down("sm")]: {
           pl: "0rem",
           pr: "0rem",
         },
       }}
     >
-      <NavBar />
-
       <Grid item>
         <Avatar
           variant="square"
@@ -76,8 +78,8 @@ function JobPost() {
             mt: "1rem",
             ml: "2rem",
             [theme.breakpoints.down("sm")]: {
-              width: "6rem",
-              height: "6rem",
+              width: "7rem",
+              height: "7rem",
               mt: "0.5rem",
               ml: "0.5rem",
             },
@@ -112,13 +114,11 @@ function JobPost() {
             fontSize: "2rem",
             fontWeight: "600",
             [theme.breakpoints.down("md")]: {
+              hyphens: "auto",
               fontSize: "2rem",
             },
             [theme.breakpoints.down("sm")]: {
-              fontSize: "1.9rem",
-            },
-            [theme.breakpoints.down("xs")]: {
-              fontSize: "0.7rem",
+              fontSize: "1rem",
             },
           }}
         >
@@ -132,14 +132,12 @@ function JobPost() {
             fontSize: "2.5rem",
             fontWeight: "bold",
             [theme.breakpoints.down("md")]: {
+              hyphens: "auto",
               fontSize: "1.5rem",
             },
             [theme.breakpoints.down("sm")]: {
-              fontSize: "1.3rem",
-            },
-            [theme.breakpoints.down("xs")]: {
-              fontSize: "1.2rem",
-            },
+              fontSize: "1.4rem",
+            }
           }}
         >
           {jobData.JobTitle}
@@ -151,26 +149,23 @@ function JobPost() {
           mt: "2rem",
           fontSize: "1rem",
           height: "2.5rem",
-          width: "6rem",
           boxShadow: "none",
           borderRadius: "10px",
+          width: "auto",
           [theme.breakpoints.down("md")]: {
             fontSize: "0.9rem",
             height: "2rem",
-            width: "5rem",
             borderRadius: "5px",
           },
           [theme.breakpoints.down("sm")]: {
             mt: "0.3rem",
             fontSize: "0.7rem",
             height: "1.6rem",
-            width: "5rem",
             borderRadius: "5px",
           },
           [theme.breakpoints.down("xs")]: {
             fontSize: "0.7rem",
             height: "1.4rem",
-            width: "4rem",
           },
         }}
         onClick={handleApplyClick}
@@ -397,6 +392,7 @@ function JobPost() {
         </Typography>
       </Grid>
     </Grid>
+    </>
   );
 }
 
