@@ -182,7 +182,6 @@ document
                 if(orgTextDecoration)
                 {
                     anchor.style.textDecoration = orgTextDecoration;
-                    anchor.removeAttribute('data-asw-orgLinkTextDecoration');
                 }
                 else
                 {
@@ -200,7 +199,6 @@ document
                 if(orgFontSize)
                 {
                     anchor.style.fontSize = orgFontSize;
-                    anchor.removeAttribute('data-asw-orgLinkFontSize');
                 }
                 else
                 {
@@ -209,12 +207,14 @@ document
                 if(orgLinkColor)
                 {
                     anchor.style.color = orgLinkColor;
-                    anchor.removeAttribute('data-asw-orgLinkColor');
                 }
                 else
                 {
                     anchor.style.removeProperty('color');
                 }
+                anchor.removeAttribute('data-asw-orgLinkFontSize');
+                anchor.removeAttribute('data-asw-orgLinkColor');
+                anchor.removeAttribute('data-asw-orgLinkTextDecoration');
             });
             localStorage.setItem('isHighlightLinks', 0);
         }
@@ -254,12 +254,12 @@ function enableHighlightHeadings(load = false) {
             if(orgHighlightColor)
             {
                 heading.style.color = orgHighlightColor;
-                heading.removeAttribute('data-asw-orgHighlightColor');
             }
             else
             {
                 heading.style.removeProperty('color');
             }
+            heading.removeAttribute('data-asw-orgHighlightColor');
         });
 
         localStorage.setItem('isHighlightHeadings', 0);
@@ -363,65 +363,25 @@ function adjustContrast(load = false) {
     }
     if (!isContrastEnabled) {
         document
-        .querySelectorAll("*")
+        .querySelectorAll("h1,h2,h3,h4,h5,h6,a,span,p,li,button,img,section,article,header,footer,nav,aside,main,form,fieldset,legend,pre,abbr,address,blockquote,cite,code,del,dfn,em,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,table,th,td,tbody,thead,tfoot,tr,button,input,textarea,select,option,label,fieldset,legend,progress,figure,figcaption,mark,menu,summary,time,hr,frameset,frame,iframe")
         .forEach((el) => {
-            let orgColor = el.getAttribute('data-asw-orgContrastColor');
-            let orgBgColor = el.getAttribute('data-asw-orgContrastBgColor');
-            let orgBorderColor = el.getAttribute('data-asw-orgContrastBorderColor');
-
-            if (!orgColor) {
-                orgColor = el.style.color;
-                el.setAttribute('data-asw-orgContrastColor', orgColor);
-            }
-            if(!orgBgColor) {
-                orgBgColor = window.getComputedStyle(el).getPropertyValue('background-color');
-                el.setAttribute('data-asw-orgContrastBgColor', orgBgColor);
-            }
-            if(!orgBorderColor) {
-                orgBorderColor = window.getComputedStyle(el).getPropertyValue('border-color');
-                el.setAttribute('data-asw-orgContrastBorderColor', orgBorderColor);
-            }
-
-            el.style["color"] = '#ffff00';
-            el.style["background-color"] = 'black';
-            el.style["border-color"] = '#ffff00';
-            if(el.tagName === 'IMG')
+            let orgColor = el.getAttribute('data-asw-orgContrast');
+            if(!orgColor)
             {
-                el.style["filter"] = 'invert(100%)';
+                orgColor = el.style.filter;
+                el.setAttribute('data-asw-orgContrast', orgColor);
             }
+            el.style["filter"] = 'contrast(200%)';
         });
 
         localStorage.setItem('isContrastEnabled', 1);
         } else {
             document
-            .querySelectorAll("*")
+            .querySelectorAll("h1,h2,h3,h4,h5,h6,a,span,p,li,button,img,section,article,header,footer,nav,aside,main,form,fieldset,legend,pre,abbr,address,blockquote,cite,code,del,dfn,em,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,table,th,td,tbody,thead,tfoot,tr,button,input,textarea,select,option,label,fieldset,legend,progress,figure,figcaption,mark,menu,summary,time,hr,frameset,frame,iframe")
             .forEach((el) => {
-                let orgContrastColor = el.getAttribute('data-asw-orgContrastColor');
-                let orgContrastBgColor = el.getAttribute('data-asw-orgContrastBgColor');
-                let orgContrastBorderColor = el.getAttribute('data-asw-orgContrastBorderColor');
-                if (orgContrastColor) {
-                el.style.color = orgContrastColor;
-                } else {
-                el.style.removeProperty('color');
-                }
-                if (orgContrastBgColor) {
-                el.style.backgroundColor = orgContrastBgColor;
-                } else {
-                el.style.removeProperty('background-color');
-                }
-                if (orgContrastBorderColor) {
-                el.style.borderColor = orgContrastBorderColor;
-                } else {
-                el.style.removeProperty('border-color');
-                }
-                if(el.tagName === 'IMG')
-                {
+                let orgColor = el.getAttribute('data-asw-orgContrast');
                     el.style.removeProperty('filter');
-                }
-
-                el.removeAttribute('data-asw-orgContrastColor');
-                el.removeAttribute('data-asw-orgContrastBgColor');
-                el.removeAttribute('data-asw-orgContrastBorderColor');
+                    el.removeAttribute('data-asw-orgContrast');
             });
         localStorage.setItem('isContrastEnabled', 0);
     }
