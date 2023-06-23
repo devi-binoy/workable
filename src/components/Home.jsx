@@ -277,11 +277,7 @@ function Home() {
           marginLeft: { xs: "22px", md: "5%" },
           marginRight: { xs: "22px", md: "5%" },
           overflow: "hidden",
-          [theme.breakpoints.down("md")]: {
-            mt: 14,
-          }
         }}
-        
       >
        <Typography
               tabIndex={0}
