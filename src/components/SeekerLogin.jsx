@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const SeekerLogin = () => {
   const [login, setLogin] = useState(true);
@@ -14,7 +14,7 @@ const SeekerLogin = () => {
   const { createUser, loginUser, loginGoogle } = UserAuth();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  
+
   const location = useLocation();
   useEffect(() => {
     onPageLoad();
@@ -137,18 +137,18 @@ const SeekerLogin = () => {
               Log In
             </Button>
             {errorMessage && (
-            <Typography
-              variant="body2"
-              color="error"
-              mt={2}
-              ml={4}
-              fontSize={14}
-              fontWeight={400}
-            >
-              {errorMessage}
-            </Typography>
-          )}
-        </form>
+              <Typography
+                variant="body2"
+                color="error"
+                mt={2}
+                ml={4}
+                fontSize={14}
+                fontWeight={400}
+              >
+                {errorMessage}
+              </Typography>
+            )}
+          </form>
         ) : (
           <form
             onSubmit={handleSignup}
@@ -203,17 +203,17 @@ const SeekerLogin = () => {
               Sign Up
             </Button>
             {errorMessage && (
-            <Typography
-              variant="body2"
-              color="error"
-              mt={2}
-              ml={4}
-              fontSize={14}
-              fontWeight={400}
-            >
-              {errorMessage}
-            </Typography>
-          )}
+              <Typography
+                variant="body2"
+                color="error"
+                mt={2}
+                ml={4}
+                fontSize={14}
+                fontWeight={400}
+              >
+                {errorMessage}
+              </Typography>
+            )}
           </form>
         )}
 

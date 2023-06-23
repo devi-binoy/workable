@@ -7,11 +7,11 @@ import {
   MenuItem,
   Box,
   InputLabel,
-  Select
+  Select,
 } from "@mui/material";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setSeeker } from "../services/SeekerDetails";
 
 const Register = () => {
@@ -34,10 +34,6 @@ const Register = () => {
       setEmail(user.email);
     }
   }, [user]);
-  const location = useLocation();
-  useEffect(() => {
-    onPageLoad();
-  }, [location.pathname]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +59,7 @@ const Register = () => {
     <>
       <Box
         textAlign="left"
-        mt={10}
+        mt={5}
         mb={2}
         sx={{
           marginLeft: { xs: "22px", md: "5%" },
@@ -89,8 +85,8 @@ const Register = () => {
             },
           }}
         >
-          Unlock your potential in an <span style={{ color: "#419D4A" }}>Inclusive </span>{" "}
-          Community.
+          Unlock your potential in an{" "}
+          <span style={{ color: "#419D4A" }}>Inclusive </span> Community.
         </Typography>
         <Typography
           variant="subtitle1"
@@ -102,16 +98,34 @@ const Register = () => {
       </Box>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2} sx={{ padding: { xs: 2, sm: 15 } }}>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
             <TextField
               label="Name"
               onChange={(e) => setName(e.target.value)}
               fullWidth
               margin="normal"
               variant="outlined"
+              required
+              InputLabelProps={{
+                shrink: true,
+              }}
+              InputProps={{
+                tabIndex: 0,
+              }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Date of Birth"
               type="date"
@@ -119,15 +133,23 @@ const Register = () => {
               fullWidth
               margin="normal"
               variant="outlined"
+              required
               InputLabelProps={{
                 shrink: true,
               }}
               InputProps={{
                 style: { color: "black" },
+                tabIndex: 0,
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               select
               label="Gender"
@@ -135,18 +157,29 @@ const Register = () => {
               fullWidth
               margin="normal"
               variant="outlined"
+              required
+              InputProps={{
+                readOnly: true,
+                tabIndex: 0,
+              }}
             >
               <MenuItem value={"Male"}>Male</MenuItem>
               <MenuItem value={"Female"}>Female</MenuItem>
               <MenuItem value={"Other"}>Other</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               select
               className="disabilityselect"
               label="Disability Category"
-              value={disabilityCategory} // Use the array value
+              value={disabilityCategory}
               onChange={(e) => setDisabilityCategory(e.target.value)}
               fullWidth
               margin="normal"
@@ -154,6 +187,14 @@ const Register = () => {
               SelectProps={{
                 multiple: true,
                 renderValue: (selected) => selected.join(", "),
+                MenuProps: {
+                  style: {
+                    maxHeight: 250,
+                  },
+                },
+              }}
+              InputProps={{
+                tabIndex: 0,
               }}
             >
               <MenuItem value={"Blindness"}>Blindness</MenuItem>
@@ -209,69 +250,136 @@ const Register = () => {
               </MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Resume Link"
               onChange={(e) => setResumeLink(e.target.value)}
               fullWidth
               margin="normal"
               variant="outlined"
+              required
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Contact Number"
               onChange={(e) => setContactNumber(e.target.value)}
               fullWidth
               margin="normal"
               variant="outlined"
+              required
+              InputProps={{
+                tabIndex: 0,
+              }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Email"
-              value={email}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
               margin="normal"
               variant="outlined"
+              required
+              value={email}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              InputProps={{
+                tabIndex: 0,
+              }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Address"
               onChange={(e) => setAddress(e.target.value)}
               fullWidth
               margin="normal"
               variant="outlined"
+              required
+              InputProps={{
+                tabIndex: 0,
+              }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <InputLabel id="experience-label">Experience</InputLabel>
-            <Select
-              labelId="experience-label"
-              value={experience}
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            <TextField
+              label="Experience"
               onChange={(e) => setExperience(e.target.value)}
               fullWidth
+              margin="normal"
               variant="outlined"
               required
-              displayEmpty
+              select
+              SelectProps={{
+                displayEmpty: true,
+              }}
             >
               <MenuItem value="">Select Experience</MenuItem>
               <MenuItem value="0-1 years">0-1 years</MenuItem>
               <MenuItem value="2-4 years">2-4 years</MenuItem>
               <MenuItem value="5+ years">5+ years</MenuItem>
-            </Select>
+            </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
             <TextField
               label="Qualification"
               onChange={(e) => setQualification(e.target.value)}
               fullWidth
               margin="normal"
               variant="outlined"
-            />
+              required
+              select
+              SelectProps={{
+                displayEmpty: true,
+              }}
+            >
+              <MenuItem value="">Select Qualification</MenuItem>
+              <MenuItem value={"Higher Secondary Education"}>
+                Higher Secondary Education
+              </MenuItem>
+              <MenuItem value={"Diploma"}>Diploma</MenuItem>
+              <MenuItem value={"Bachelor's Degree"}>Bachelor's Degree</MenuItem>
+              <MenuItem value={"Master's Degree"}>Master's Degree</MenuItem>
+            </TextField>
           </Grid>
+
           <Grid item container justifyContent={"flex-end"} xs={12}>
             <Button variant="contained" color="primary" type="submit">
               {isRegistering ? "Registering..." : "Register"}

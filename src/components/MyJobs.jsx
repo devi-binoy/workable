@@ -6,11 +6,10 @@ import { UserAuth } from "../context/AuthContext";
 import { getApplied } from "../services/Apply";
 import { useLocation } from "react-router-dom";
 
-
 function MyJobs() {
   const theme = useTheme();
   const [jobs, setJobs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = UserAuth();
   const userid = user.uid;
   const location = useLocation();
@@ -26,7 +25,7 @@ function MyJobs() {
         console.error("Error fetching jobs:", error);
       })
       .finally(() => {
-        setIsLoading(false); 
+        setIsLoading(false);
       });
   }, []);
 
@@ -39,22 +38,21 @@ function MyJobs() {
           px: { xs: 2, sm: 4 },
           [theme.breakpoints.down("md")]: {
             mt: 14,
-          }
+          },
         }}
       >
         <Typography
           tabIndex={0}
-          variant="h4"
           sx={{
             fontWeight: "600",
             [theme.breakpoints.down("md")]: {
-              fontSize: "3rem",
+              fontSize: "3.5rem",
             },
             [theme.breakpoints.down("sm")]: {
-              fontSize: "1.9rem",
+              fontSize: "2.5rem",
             },
             [theme.breakpoints.down("xs")]: {
-              fontSize: "0.9rem",
+              fontSize: "1.5rem",
             },
             lineHeight: { xs: "40px", sm: "80px" },
             textAlign: "center",
@@ -63,7 +61,8 @@ function MyJobs() {
         >
           My Jobs List
         </Typography>
-        {isLoading ? ( 
+
+        {isLoading ? (
           <Typography
             tabIndex={0}
             variant="body1"

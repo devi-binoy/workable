@@ -7,15 +7,10 @@ import {
   Chip,
   useTheme,
 } from "@mui/material";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom"; 
 
 const JobCard = ({ job, handleJobCardClick }) => {
   const theme = useTheme();
-  const location = useLocation();
-  useEffect(() => {
-    onPageLoad();
-  }, [location.pathname]);
+
   console.log(job);
 
   const {
@@ -54,7 +49,9 @@ const JobCard = ({ job, handleJobCardClick }) => {
       sx={{
         margin: "1.5rem auto",
         borderRadius: "10px",
+        border: "1px solid #b9c7bd",
         minWidth: "80%",
+        boxShadow: "none",
         [theme.breakpoints.up("sm")]: {
           maxWidth: "70%",
         },
@@ -143,8 +140,17 @@ const JobCard = ({ job, handleJobCardClick }) => {
                     label={status}
                     variant="outlined"
                     sx={{
-                      backgroundColor: "#E3E9FF",
-                      color: "#4668E0",
+                      backgroundColor:
+                        status === "Applied"
+                          ? "#b8d5f2"
+                          : status === "Selected"
+                          ? "#9afa91"
+                          : status === "Not Selected"
+                          ? "#f58b7f"
+                          : status === "Shortlisted"
+                          ? "#f7e09e"
+                          : "#b8d5f2",
+                      color: "#000",
                       fontSize: "0.9rem",
                       marginTop: "0.9rem",
                       [theme.breakpoints.down("md")]: {
@@ -194,54 +200,49 @@ const JobCard = ({ job, handleJobCardClick }) => {
               {jobDescription}
             </Typography>
             <Box
-  display="flex"
-  alignItems="center"
-  sx={{
-    flexWrap: "wrap",
-    gap: "0.5rem",
-    marginLeft: { xs: 0, sm: "3rem" },
-    [theme.breakpoints.down("md")]: {
-      marginLeft: 0,
-    },
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "2rem",
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginLeft: "1rem",
-    },
-  }}
->
-  {Array.isArray(disabilityCategory) &&
-    disabilityCategory.map((disability, index) => (
-      <Chip
-        key={index}
-        label={disability}
-        sx={{
-          backgroundColor: "#CAFFCF",
-          borderRadius: 3,
-          fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
-          height: { xs: 24, sm: 32, md: 40 },
-          padding: {
-            xs: "0.25rem 0.5rem",
-            sm: "0.5rem 0.2",
-            md: "0.75rem 0.25rem",
-          },
-          [theme.breakpoints.down("xs")]: {
-            fontSize: "0.7rem",
-            height: 20,
-            padding: "0.15rem 0.3rem",
-          },
-        }}
-      />
-    ))}
-</Box>
-
-
-            <Box
               display="flex"
               alignItems="center"
-              marginTop={1}
+              sx={{
+                flexWrap: "wrap",
+                gap: "0.5rem",
+                marginLeft: { xs: 0, sm: "3rem" },
+                [theme.breakpoints.down("md")]: {
+                  marginLeft: 0,
+                },
+                [theme.breakpoints.down("sm")]: {
+                  marginLeft: "2rem",
+                },
+                [theme.breakpoints.down("xs")]: {
+                  marginLeft: "1rem",
+                },
+              }}
             >
+              {Array.isArray(disabilityCategory) &&
+                disabilityCategory.map((disability, index) => (
+                  <Chip
+                    key={index}
+                    label={disability}
+                    sx={{
+                      backgroundColor: "#CAFFCF",
+                      borderRadius: 3,
+                      fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
+                      height: { xs: 24, sm: 32, md: 40 },
+                      padding: {
+                        xs: "0.25rem 0.5rem",
+                        sm: "0.5rem 0.2",
+                        md: "0.75rem 0.25rem",
+                      },
+                      [theme.breakpoints.down("xs")]: {
+                        fontSize: "0.7rem",
+                        height: 20,
+                        padding: "0.15rem 0.3rem",
+                      },
+                    }}
+                  />
+                ))}
+            </Box>
+
+            <Box display="flex" alignItems="center" marginTop={1}>
               <Typography
                 variant="body2"
                 sx={{

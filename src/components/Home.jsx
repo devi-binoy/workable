@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Typography,
   Box,
@@ -53,11 +53,6 @@ function Home() {
   const navigate = useNavigate();
   const [filterConditions, setFilterConditions] = useState([]);
   const { user } = UserAuth();
-  const route = useLocation();
-
-  useEffect(() => {
-    onPageLoad();
-  }, [route.pathname]);
 
   const disabilityCategories = [
     "Leprosy Cured persons",
@@ -288,7 +283,6 @@ function Home() {
             marginLeft: "5%",
           },
         }}
-        
       >
         <Typography
           tabIndex={0}
@@ -333,124 +327,120 @@ function Home() {
       </Box>
 
       <Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "16px",
-    marginTop: { xs: "12px", md: "3%" },
-    flexWrap: "wrap",
-  }}
->
-<TextField
-  id="disability-input"
-  select
-  label="Disability"
-  title="Disability Drop Down"
-  variant="outlined"
-  sx={{
-    width: { xs: 280, sm: 300 },
-    [theme.breakpoints.down("xs")]:{
-      width: 280
-    },
-    background: "white",
-  }}
-  value={disability}
-  onChange={(e) => setDisability(e.target.value)}
-  labelId="disability-label"
-  aria-label="Disability Drop Down"
-  InputProps={{
-    style: {
-      height: { xs: 25, sm: 30, md: 25 },
-      padding: { xs: "1px 5px", sm: "1px 8px", md: "1px 10px" },
-      [theme.breakpoints.down("xs")]: {
-        padding: "1px 6px",
-      },
-    },
-  }}
-  
-  SelectProps={{
-    style: {
-      height: { xs: 25, sm: 30, md: 25 },
-      padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
-      [theme.breakpoints.down("xs")]: {
-        padding: "1px 8px",
-      },
-    },
-    MenuProps: {
-      style: {
-        maxHeight: 200,
-      },
-    },
-  }}
-  InputLabelProps={{ shrink: true }}
->
-  {disabilityCategories.map((category) => (
-    <MenuItem key={category} value={category}>
-      {category}
-    </MenuItem>
-  ))}
-</TextField>
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "16px",
+          marginTop: { xs: "12px", md: "3%" },
+          flexWrap: "wrap",
+        }}
+      >
+        <TextField
+          id="disability-input"
+          select
+          label="Disability"
+          title="Disability Drop Down"
+          variant="outlined"
+          sx={{
+            width: { xs: 280, sm: 300 },
+            [theme.breakpoints.down("xs")]: {
+              width: 240,
+            },
+            background: "white",
+          }}
+          value={disability}
+          onChange={(e) => setDisability(e.target.value)}
+          labelId="disability-label"
+          aria-label="Disability Drop Down"
+          InputProps={{
+            style: {
+              height: { xs: 25, sm: 30, md: 25 },
+              padding: { xs: "1px 5px", sm: "1px 8px", md: "1px 10px" },
+              [theme.breakpoints.down("xs")]: {
+                padding: "1px 6px",
+              },
+            },
+          }}
+          SelectProps={{
+            style: {
+              height: { xs: 25, sm: 30, md: 25 },
+              padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
+              [theme.breakpoints.down("xs")]: {
+                padding: "1px 8px",
+              },
+            },
+            MenuProps: {
+              style: {
+                maxHeight: 200,
+              },
+            },
+          }}
+          InputLabelProps={{ shrink: true }}
+        >
+          {disabilityCategories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
+        </TextField>
 
-<TextField
-  id="location-input"
-  label="Location"
-  variant="outlined"
-  value={location}
-  onChange={(e) => setLocation(e.target.value)}
-  sx={{
-    width: { xs: 280, sm: 300 },
-    background: "white",
-  }}
-  InputProps={{
-    style: {
-      height: { xs: 25, sm: 30, md: 25 },
-      padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
-      [theme.breakpoints.down("xs")]: {
-        padding: "1px 8px",
-      },
-    },
-    startAdornment: (
-      <InputAdornment position="start">
-        <LocationOnOutlined />
-      </InputAdornment>
-    ),
-  }}
-/>
+        <TextField
+          id="location-input"
+          label="Location"
+          variant="outlined"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          sx={{
+            width: { xs: 280, sm: 300 },
+            background: "white",
+          }}
+          InputProps={{
+            style: {
+              height: { xs: 25, sm: 30, md: 25 },
+              padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
+              [theme.breakpoints.down("xs")]: {
+                padding: "1px 8px",
+              },
+            },
+            startAdornment: (
+              <InputAdornment position="start">
+                <LocationOnOutlined />
+              </InputAdornment>
+            ),
+          }}
+        />
 
-
-  <TextField
-    id="search-input"
-    label="Search for Jobs"
-    variant="outlined"
-    value={keyword}
-    onChange={(e) => setKeyword(e.target.value)}
-    sx={{
-      width: { xs: 280, sm: 300 },
-      background: "white",
-    }}
-    InputProps={{
-      style: {
-        // height: { xs: 45, sm: 40, md: 35 },
-        padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" }
-      },
-      startAdornment: (
-        <InputAdornment position="start">
-          <SearchOutlined />
-        </InputAdornment>
-      ),
-    }}
-  />
-</Box>
-
-
+        <TextField
+          id="search-input"
+          label="Search for Jobs"
+          variant="outlined"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          sx={{
+            width: { xs: 280, sm: 300 },
+            background: "white",
+          }}
+          InputProps={{
+            style: {
+              // height: { xs: 45, sm: 40, md: 35 },
+              padding: { xs: "1px 5px", sm: "1px 10px", md: "2px 12px" },
+            },
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchOutlined />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
 
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           marginTop: "12px",
-          gap: "16px",
+          gap: "35px",
         }}
       >
         <Button
@@ -474,7 +464,7 @@ function Home() {
           onClick={handleReset}
           color="inherit"
           style={{
-            backgroundColor: "transparent",
+            backgroundColor: "#fff",
             padding: "8px",
             minWidth: "unset",
             border: "1px solid #ccc",
