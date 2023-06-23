@@ -5,9 +5,11 @@ import { Typography, Box, useTheme } from "@mui/material";
 import { UserAuth } from "../context/AuthContext";
 import { getApplied } from "../services/Apply";
 
+
 function MyJobs() {
   const theme = useTheme();
   const [jobs, setJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); 
   const { user } = UserAuth();
   const userid = user.uid;
 
@@ -18,6 +20,9 @@ function MyJobs() {
       })
       .catch((error) => {
         console.error("Error fetching jobs:", error);
+      })
+      .finally(() => {
+        setIsLoading(false); 
       });
   }, []);
 
@@ -31,7 +36,7 @@ function MyJobs() {
         }}
       >
         <Typography
-              tabIndex={0}
+          tabIndex={0}
           variant="h4"
           sx={{
             fontWeight: "600",
@@ -51,9 +56,9 @@ function MyJobs() {
         >
           My Jobs List
         </Typography>
-        {jobs.length === 0 ? (
+        {isLoading ? ( 
           <Typography
-              tabIndex={0}
+            tabIndex={0}
             variant="body1"
             sx={{
               fontSize: "1.2rem",
@@ -62,7 +67,20 @@ function MyJobs() {
               mb: 2,
             }}
           >
-            You haven't applied to any jobs yet.
+            Loading...
+          </Typography>
+        ) : jobs.length === 0 ? (
+          <Typography
+            tabIndex={0}
+            variant="body1"
+            sx={{
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textAlign: "center",
+              mb: 2,
+            }}
+          >
+            No jobs available.
           </Typography>
         ) : (
           jobs.map((job, index) => <JobCard job={job} key={index} />)

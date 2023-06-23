@@ -105,10 +105,14 @@ const Form = () => {
           marginLeft: { xs: "22px", md: "5%" },
           marginRight: { xs: "22px", md: "5%" },
           overflow: "hidden",
+          [theme.breakpoints.down("xs")]: {
+            marginLeft: "22px",
+            marginRight: "22px",
+          },
         }}
       >
         <Typography
-              tabIndex={0}
+          tabIndex={0}
           variant="heading1"
           sx={{
             fontWeight: "bold",
@@ -130,7 +134,7 @@ const Form = () => {
           Workforce.
         </Typography>
         <Typography
-              tabIndex={0}
+          tabIndex={0}
           variant="subtitle1"
           fontSize={{ xs: "0.rem", sm: "0.75rem", md: "0.85rem", lg: "1rem" }}
           sx={{ color: "#767676", lineHeight: "1.5rem" }}
@@ -139,8 +143,22 @@ const Form = () => {
         </Typography>
       </Box>
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2} sx={{ padding: { xs: 2, sm: 15 } }}>
-          <Grid item xs={12} sm={6}>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            padding: { xs: 2, sm: 15 },
+            [theme.breakpoints.down("xs")]: {
+              padding: 2,
+            },
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
             <TextField
               label="Name"
               onChange={(e) => setName(e.target.value)}
@@ -158,7 +176,13 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Date of Birth"
               type="date"
@@ -178,7 +202,13 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               select
               label="Gender"
@@ -199,7 +229,13 @@ const Form = () => {
               <MenuItem value={"Other"}>Other</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               select
               className="disabilityselect"
@@ -271,7 +307,13 @@ const Form = () => {
               </MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Resume Link"
               onChange={(e) => setResumeLink(e.target.value)}
@@ -285,7 +327,13 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Contact Number"
               onChange={(e) => setContactNumber(e.target.value)}
@@ -303,7 +351,13 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Email"
               onChange={(e) => setEmail(e.target.value)}
@@ -321,7 +375,13 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Address"
               onChange={(e) => setAddress(e.target.value)}
@@ -339,7 +399,13 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <InputLabel id="experience-label">Experience</InputLabel>
             <Select
               labelId="experience-label"
@@ -356,7 +422,13 @@ const Form = () => {
               <MenuItem value="5+ years">5+ years</MenuItem>
             </Select>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Qualification"
               onChange={(e) => setQualification(e.target.value)}
@@ -370,7 +442,12 @@ const Form = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
+          >
+            {" "}
             <TextField
               label="Cover Letter"
               onChange={(e) => setCoverLetter(e.target.value)}

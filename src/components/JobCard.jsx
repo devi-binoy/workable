@@ -69,7 +69,6 @@ const JobCard = ({ job, handleJobCardClick }) => {
         >
           <Box
             sx={{
-              marginRight: { xs: 0, sm: "1rem" },
               marginBottom: { xs: "1rem", sm: 0 },
               alignSelf: { xs: "center", sm: "flex-start" },
             }}
@@ -177,52 +176,66 @@ const JobCard = ({ job, handleJobCardClick }) => {
                 [theme.breakpoints.down("sm")]: {
                   fontSize: "0.8rem",
                   maxWidth: "300px",
+                  textAlign: "center",
                 },
                 [theme.breakpoints.down("xs")]: {
                   fontSize: "0.7rem",
                   maxWidth: "200px",
+                  textAlign: "left",
+                  marginBottom: 1,
                 },
               }}
             >
               {jobDescription}
             </Typography>
             <Box
-              display="flex"
-              alignItems="center"
-              marginTop={1}
-              sx={{
-                flexWrap: "wrap",
-                gap: "0.5rem",
-                marginLeft: { xs: 0, sm: "3rem" },
-              }}
-            >
-              {Array.isArray(disabilityCategory) &&
-                disabilityCategory.map((disability, index) => (
-                  <Chip
-                    key={index}
-                    label={disability}
-                    sx={{
-                      backgroundColor: "#CAFFCF",
-                      borderRadius: 3,
-                    }}
-                  />
-                ))}
-            </Box>
+  display="flex"
+  alignItems="center"
+  sx={{
+    flexWrap: "wrap",
+    gap: "0.5rem",
+    marginLeft: { xs: 0, sm: "3rem" },
+    [theme.breakpoints.down("md")]: {
+      marginLeft: 0,
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "2rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: "1rem",
+    },
+  }}
+>
+  {Array.isArray(disabilityCategory) &&
+    disabilityCategory.map((disability, index) => (
+      <Chip
+        key={index}
+        label={disability}
+        sx={{
+          backgroundColor: "#CAFFCF",
+          borderRadius: 3,
+          fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
+          height: { xs: 24, sm: 32, md: 40 },
+          padding: {
+            xs: "0.25rem 0.5rem",
+            sm: "0.5rem 0.2",
+            md: "0.75rem 0.25rem",
+          },
+          [theme.breakpoints.down("xs")]: {
+            fontSize: "0.7rem",
+            height: 20,
+            padding: "0.15rem 0.3rem",
+          },
+        }}
+      />
+    ))}
+</Box>
+
+
             <Box
               display="flex"
               alignItems="center"
               marginTop={1}
-              sx={{
-                [theme.breakpoints.down("md")]: {
-                  marginLeft: "0.1rem",
-                },
-                [theme.breakpoints.down("sm")]: {
-                  marginLeft: "3rem",
-                },
-                [theme.breakpoints.down("xs")]: {
-                  marginLeft: "0.1rem",
-                },
-              }}
             >
               <Typography
                 variant="body2"
@@ -239,7 +252,7 @@ const JobCard = ({ job, handleJobCardClick }) => {
                   },
                 }}
               >
-                {JobType} | {JobLocation} | {NumberofOpenings} openings| ₹
+                {JobType} | {JobLocation} | {NumberofOpenings} openings | ₹
                 {SalaryRange} | {experience}
               </Typography>
             </Box>
