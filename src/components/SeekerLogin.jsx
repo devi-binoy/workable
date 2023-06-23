@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const SeekerLogin = () => {
   const [login, setLogin] = useState(true);
@@ -14,6 +14,11 @@ const SeekerLogin = () => {
   const { createUser, loginUser, loginGoogle } = UserAuth();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  
+  const location = useLocation();
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
 
   const handleSignup = async (e) => {
     e.preventDefault();

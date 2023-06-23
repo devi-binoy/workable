@@ -4,6 +4,7 @@ import NavBar from "./NavBar";
 import { Typography, Box, useTheme } from "@mui/material";
 import { UserAuth } from "../context/AuthContext";
 import { getApplied } from "../services/Apply";
+import { useLocation } from "react-router-dom";
 
 
 function MyJobs() {
@@ -12,7 +13,10 @@ function MyJobs() {
   const [isLoading, setIsLoading] = useState(true); 
   const { user } = UserAuth();
   const userid = user.uid;
-
+  const location = useLocation();
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
   useEffect(() => {
     getApplied(userid)
       .then((jobs) => {

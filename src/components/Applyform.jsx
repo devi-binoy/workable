@@ -94,6 +94,10 @@ const Form = () => {
     navigate("/myjobs");
   };
 
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
+
   return (
     <>
       <NavBar />

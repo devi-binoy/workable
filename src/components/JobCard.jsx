@@ -7,10 +7,15 @@ import {
   Chip,
   useTheme,
 } from "@mui/material";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom"; 
 
 const JobCard = ({ job, handleJobCardClick }) => {
   const theme = useTheme();
-
+  const location = useLocation();
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
   console.log(job);
 
   const {

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { setSeeker } from "../services/SeekerDetails";
 
 const Register = () => {
@@ -34,6 +34,10 @@ const Register = () => {
       setEmail(user.email);
     }
   }, [user]);
+  const location = useLocation();
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -16,6 +16,9 @@ function JobPost() {
   const [jobData, setJobData] = useState({});
   const { user } = UserAuth();
   useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
+  useEffect(() => {
     const fetchJobData = async () => {
       try {
         const data = await fetchJobDetails(jobId);
@@ -122,7 +125,7 @@ function JobPost() {
             },
           }}
         >
-          {jobData.companyname}
+          {jobData.JobTitle}
         </Typography>
         <Typography
               tabIndex={0}
@@ -140,7 +143,7 @@ function JobPost() {
             }
           }}
         >
-          {jobData.JobTitle}
+          {jobData.companyname}
         </Typography>
       </Grid>
       <Button

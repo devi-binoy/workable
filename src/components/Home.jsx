@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import {
   Typography,
   Box,
@@ -53,6 +53,11 @@ function Home() {
   const navigate = useNavigate();
   const [filterConditions, setFilterConditions] = useState([]);
   const { user } = UserAuth();
+  const route = useLocation();
+
+  useEffect(() => {
+    onPageLoad();
+  }, [route.pathname]);
 
   const disabilityCategories = [
     "Leprosy Cured persons",

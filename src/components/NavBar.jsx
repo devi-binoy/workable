@@ -12,9 +12,11 @@ import {
   useTheme,
 } from '@mui/material';
 import { Menu } from '@mui/icons-material';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React,{ useState } from 'react';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
+import theme from '../theme';
 import { UserAuth } from '../context/AuthContext';
+import { useEffect } from 'react';
 
 const NavBar = () => {
   const theme = useTheme();
@@ -22,6 +24,11 @@ const NavBar = () => {
   const { user, logoutUser } = UserAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const location = useLocation();
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logoutUser();
