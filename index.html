@@ -30,7 +30,6 @@
       .VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc,.VIpgJd-ZVi9od-aZ2wEe-wOHMyf{
          display: none!important;
       }
-     /*google translate Dropdown */
      #google_translate_element select{
       font-size: large;
       font-family: 'Inter';
@@ -252,11 +251,13 @@
           </div>
           <div>
               <div role="button" class="asw-menu-reset"  title="Reset settings" onclick="reset()">
+                <div  class="notranslate">
                   <span class="material-icons" >
                       restart_alt
                   </span>
               </div>
               <div role="button" class="asw-menu-close" title="Close" onclick="toggleMenu()">
+                <div  class="notranslate">
                   <span class="material-icons" >
                       close
                   </span>
@@ -267,43 +268,43 @@
           <div class="asw-card">
               <div class="asw-items content">
                   <button class="asw-btn" type="button" onclick="adjustFontSize(0.1)">
-                      <span class="material-icons">format_size</span>
+                    <div  class="notranslate"><span class="material-icons">format_size</span></div>
                       <span class="asw-translate">Increase Font Size</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="adjustFontSize(-0.1)">
-                      <span class="material-icons">text_fields</span>
-                      <span class="asw-translate">Decrease Font Size</span>
+                    <div  class="notranslate"><span class="material-icons">text_fields</span></div>
+                    <span class="asw-translate">Decrease Font Size</span>
                   </button>
                   <button class="asw-btn" type="button" onclick=" adjustLineHeight(1)">
-                      <span class="material-icons">format_line_spacing</span>
-                      <span class="asw-translate">Line Spacing</span>
+                    <div  class="notranslate"><span class="material-icons">format_line_spacing</span></div>
+                    <span class="asw-translate">Line Spacing</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="adjustLetterSpacing(0.1)">
-                      <span class="material-icons">text_rotation_none</span>
-                      <span class="asw-translate">Letter Spacing</span>
+                    <div  class="notranslate"><span class="material-icons">text_rotation_none</span></div>
+                    <span class="asw-translate">Letter Spacing</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="enableDyslexicFont()">
-                      <span class="material-icons">spellcheck</span>
+                    <div  class="notranslate"><span class="material-icons">spellcheck</span></div>
                       <span class="asw-translate">Dyslexic Font</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="enableHighlightHeadings()">
-                      <span class="material-icons">local_parking</span>
+                    <div  class="notranslate"><span class="material-icons">local_parking</span></div>
                       <span class="asw-translate">Highlight Headings</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="enableHighlightLinks()">
-                      <span class="material-icons">link</span>
+                    <div  class="notranslate"><span class="material-icons">link</span></div>
                       <span class="asw-translate">Highlight Links</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="adjustFontWeight(400)">
-                      <span class="material-icons">format_bold</span>
+                    <div  class="notranslate"><span class="material-icons">format_bold</span></div>
                       <span class="asw-translate">Font Weight</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="enableBigCursor()">
-                      <span class="material-icons">ads_click</span>
+                    <div  class="notranslate"><span class="material-icons">ads_click</span></div>
                       <span class="asw-translate">Bigger Cursor</span>
                   </button>
                   <button class="asw-btn" type="button" onclick="adjustContrast()">
-                      <span class="material-icons">contrast</span>
+                    <div  class="notranslate"><span class="material-icons">contrast</span></div>
                       <span class="asw-translate">Contrast</span>
                   </button>
               </div>
