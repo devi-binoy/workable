@@ -42,6 +42,7 @@ const Form = () => {
   const location = useLocation();
   const jobid = location.state && location.state.jobId;
   const jobTitle = location.state && location.state.jobTitle;
+  console.log(jobTitle);
 
   useEffect(() => {
     const fetchData = async () => {
