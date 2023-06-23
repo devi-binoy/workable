@@ -44,26 +44,28 @@ function JobPost() {
   };
 
   return (
+    <>
+    <NavBar />
     <Grid
       container
       spacing={3}
+      ml= {4}
+      mr= {4}
+      mt= {12}
       sx={{
         backgroundColor: "#FFFFFF",
         boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.05)",
         borderRadius: "9px",
-        mt: "9rem",
-        ml: "2rem",
-        mr: "2rem",
-        mb: "3rem",
         p: "2rem",
+        [theme.breakpoints.down("md")]: {
+          mt: 14,
+        },
         [theme.breakpoints.down("sm")]: {
           pl: "0rem",
           pr: "0rem",
         },
       }}
     >
-      <NavBar />
-
       <Grid item>
         <Avatar
           variant="square"
@@ -109,10 +111,10 @@ function JobPost() {
           lg={12}
           variant="heading2"
           sx={{
-            hyphens: "auto",
             fontSize: "2rem",
             fontWeight: "600",
             [theme.breakpoints.down("md")]: {
+              hyphens: "auto",
               fontSize: "2rem",
             },
             [theme.breakpoints.down("sm")]: {
@@ -127,10 +129,10 @@ function JobPost() {
           lg={12}
           variant="heading1"
           sx={{
-            hyphens: "auto",
             fontSize: "2.5rem",
             fontWeight: "bold",
             [theme.breakpoints.down("md")]: {
+              hyphens: "auto",
               fontSize: "1.5rem",
             },
             [theme.breakpoints.down("sm")]: {
@@ -390,6 +392,7 @@ function JobPost() {
         </Typography>
       </Grid>
     </Grid>
+    </>
   );
 }
 
