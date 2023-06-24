@@ -28,6 +28,7 @@ export const apply = async (data, userid) => {
   await addDoc(applicantsCollectionRef, {
     userid: data.userid,
     joblistingId: data.joblistingId,
+    jobTitle: data.jobTitle,
     name: data.name,
     dob: data.dob,
     gender: data.gender,
