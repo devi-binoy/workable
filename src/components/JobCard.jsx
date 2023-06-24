@@ -7,10 +7,15 @@ import {
   Chip,
   useTheme,
 } from "@mui/material";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const JobCard = ({ job, handleJobCardClick }) => {
   const theme = useTheme();
-
+  const location = useLocation();
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
   console.log(job);
 
   const {
@@ -147,7 +152,7 @@ const JobCard = ({ job, handleJobCardClick }) => {
                           ? "#9afa91"
                           : status === "Not Selected"
                           ? "#f58b7f"
-                          : status === "Shortlisted"
+                          : status === "Shortlist"
                           ? "#f7e09e"
                           : "#b8d5f2",
                       color: "#000",

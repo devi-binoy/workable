@@ -66,6 +66,10 @@ const Form = () => {
     fetchData();
   }, [uid]);
 
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -101,7 +105,7 @@ const Form = () => {
       <NavBar />
       <Box
         textAlign="left"
-        mt={10}
+        mt={14}
         mb={{ xs: 1, md: -10 }}
         sx={{
           marginLeft: { xs: "22px", md: "5%" },

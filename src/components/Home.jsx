@@ -345,7 +345,7 @@ function Home() {
           sx={{
             width: { xs: 280, sm: 300 },
             [theme.breakpoints.down("xs")]: {
-              width: 240,
+              width: 280,
             },
             background: "white",
           }}
