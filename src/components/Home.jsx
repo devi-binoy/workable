@@ -86,6 +86,8 @@ function Home() {
     fetchInitialListings();
   }, []);
 
+
+
   const loadNextPage = async () => {
     if (lastVisible) {
       const {
