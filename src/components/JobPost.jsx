@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from "@mui/material";
 import { Avatar } from "@mui/material";
 import theme from "../theme";
 import NavBar from "./NavBar";
 import { useLocation } from "react-router-dom";
 import { fetchJobDetails } from "../services/Job";
+import { hasApplied } from "../services/Apply"
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +15,7 @@ function JobPost() {
   const navigate = useNavigate();
   const jobId = location.state && location.state.jobId;
   const [jobData, setJobData] = useState({});
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { user } = UserAuth();
   useEffect(() => {
     onPageLoad();
@@ -38,12 +40,33 @@ function JobPost() {
     return <div>Loading...</div>;
   }
 
-  const handleApplyClick = () => {
-    if (user) {
-      navigate("/apply", { state: { jobId, jobTitle: jobData.JobTitle } });
+  const ifApplied = async () => {
+    const applicant = await hasApplied(user.uid, jobId)
+    console.log("Applied?",applicant);
+    return applicant;
+};
+  
+
+const handleApplyClick = async () => {
+  if (user) {
+    const applicant = await ifApplied(); 
+
+    if (applicant) {
+      setDialogOpen(true);
     } else {
-      navigate("/login");
+      navigate("/apply", { state: { jobId, jobTitle: jobData.JobTitle } });
     }
+  } else {
+    localStorage.setItem("prevLocation", "/job");
+    localStorage.setItem("jobId", jobId);
+    navigate("/login");
+  }
+};
+
+
+  const onClose = () => {
+    setDialogOpen(false);
+    navigate("/myjobs");
   };
   
 
@@ -395,6 +418,19 @@ function JobPost() {
         </Typography>
       </Grid>
     </Grid>
+
+    <Dialog open={dialogOpen} onClose={onClose}>
+      <DialogContent>
+        <DialogContentText>
+          You have already applied to this job. Please check "My Jobs" page for more information.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          My Jobs
+        </Button>
+      </DialogActions>
+    </Dialog>
     </>
   );
 }

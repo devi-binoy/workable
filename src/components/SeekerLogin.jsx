@@ -14,9 +14,12 @@ const SeekerLogin = () => {
   const { createUser, loginUser, loginGoogle } = UserAuth();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const [previousLocation, setPreviousLocation] = useState(null);
 
   const location = useLocation();
   useEffect(() => {
+    setPreviousLocation(location.state?.from);
+    console.log("Location: " + previousLocation);
     onPageLoad();
   }, [location.pathname]);
 
@@ -34,11 +37,20 @@ const SeekerLogin = () => {
     e.preventDefault();
     try {
       await loginUser(email, password);
-      navigate("/");
+      const previousLocation = localStorage.getItem("prevLocation");
+      const storedJobId = localStorage.getItem("jobId");
+      if (previousLocation) {
+        navigate(previousLocation, { state: { jobId: storedJobId } });
+      } else {
+        navigate("/");
+      }
+      localStorage.removeItem("prevLocation");
+      localStorage.removeItem("jobId");
     } catch (err) {
       setErrorMessage(err.message);
     }
   };
+  
 
   const handleGoogle = async (e) => {
     e.preventDefault();
