@@ -23,6 +23,33 @@ const NavBar = () => {
   const { user, logoutUser } = UserAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [ismalayalam,setIsmalayalam] = useState(false);
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'lang' && mutation.target.lang === 'ml') {
+          // Language changed to Malayalam ('ml')
+          console.log('Language changed to Malayalam');
+          setIsmalayalam(true);
+          // Perform your desired actions here
+        }
+        else{
+          setIsmalayalam(false);
+        }
+      });
+    });
+
+    const target = document.querySelector('html');
+
+    if (target) {
+      observer.observe(target, { attributes: true });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const location = useLocation();
   useEffect(() => {
@@ -86,7 +113,25 @@ const NavBar = () => {
                 </Box>
               ) : (
                 <Box display="flex" alignItems="center">
+                  {ismalayalam?
                   <Button
+                  component={Link}
+                  to="/"
+                  variant="outlined"
+                  size="small"
+                  aria-label="home"
+                  sx={{
+                    py: -1,
+                    height: "2rem",
+                    mr: 1,
+                    [theme.breakpoints.down("sm")]: {
+                      fontSize: "0.8rem",
+                      height: "1.5rem",
+                    },
+                  }}
+                >
+                  Home Page
+                </Button>:<Button
                     component={Link}
                     to="/"
                     variant="outlined"
@@ -103,7 +148,7 @@ const NavBar = () => {
                     }}
                   >
                     Home
-                  </Button>
+                  </Button>}
                   <Button
                     component={Link}
                     to="/myjobs"
@@ -122,9 +167,26 @@ const NavBar = () => {
                   >
                     My Jobs
                   </Button>
+                  {ismalayalam?
                   <Button
+                  variant="outlined"
+                  size="small"
+                  className="notranslate"
+                  onClick={handleLogout}
+                  sx={{
+                    py: -1,
+                    height: "2rem",
+                    [theme.breakpoints.down("sm")]: {
+                      fontSize: "0.8rem",
+                      height: "1.45rem",
+                    },
+                  }}
+                >
+                  ലോഗ് ഔട്ട്
+                </Button>:<Button
                     variant="outlined"
                     size="small"
+                    className="notranslate"
                     onClick={handleLogout}
                     sx={{
                       py: -1,
@@ -135,8 +197,8 @@ const NavBar = () => {
                       },
                     }}
                   >
-                    Logout
-                  </Button>
+                    Log out
+                  </Button>}
                 </Box>
               )}
             </>
