@@ -40,11 +40,12 @@ function JobPost() {
 
   const handleApplyClick = () => {
     if (user) {
-      navigate("/apply", { state: { jobId } });
+      navigate("/apply", { state: { jobId, jobTitle: jobData.JobTitle } });
     } else {
       navigate("/login");
     }
   };
+  
 
   return (
     <>

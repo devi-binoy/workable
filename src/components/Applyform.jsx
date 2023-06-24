@@ -41,7 +41,8 @@ const Form = () => {
   const uid = user.uid;
   const location = useLocation();
   const jobid = location.state && location.state.jobId;
-  console.log(jobid);
+  const jobTitle = location.state && location.state.jobTitle;
+  console.log(jobTitle);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +82,7 @@ const Form = () => {
       dob: dob,
       gender: gender,
       joblistingId: jobid,
+      jobTitle: jobTitle,
       coverLetter: coverLetter,
     };
     setIsApplying(true);
@@ -93,10 +95,6 @@ const Form = () => {
     setIsDialogOpen(false);
     navigate("/myjobs");
   };
-
-  useEffect(() => {
-    onPageLoad();
-  }, [location.pathname]);
 
   return (
     <>
@@ -432,7 +430,6 @@ const Form = () => {
             sm={6}
             sx={{ [theme.breakpoints.down("xs")]: { width: "100%" } }}
           >
-            {" "}
             <TextField
               label="Qualification"
               onChange={(e) => setQualification(e.target.value)}
@@ -441,11 +438,26 @@ const Form = () => {
               variant="outlined"
               required
               value={qualification}
+              select
+              SelectProps={{
+                displayEmpty: true,
+                renderValue: (value) =>
+                  value ? value : "Select Qualification",
+              }}
               InputLabelProps={{
                 shrink: true,
               }}
-            />
+            >
+              <MenuItem value="">Select Qualification</MenuItem>
+              <MenuItem value={"Higher Secondary Education"}>
+                Higher Secondary Education
+              </MenuItem>
+              <MenuItem value={"Diploma"}>Diploma</MenuItem>
+              <MenuItem value={"Bachelor's Degree"}>Bachelor's Degree</MenuItem>
+              <MenuItem value={"Master's Degree"}>Master's Degree</MenuItem>
+            </TextField>
           </Grid>
+
           <Grid
             item
             xs={12}

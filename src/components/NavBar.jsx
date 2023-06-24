@@ -10,19 +10,18 @@ import {
   Toolbar,
   useMediaQuery,
   useTheme,
-} from '@mui/material';
-import { Menu } from '@mui/icons-material';
-import React,{ useState } from 'react';
-import { Link, useNavigate,useLocation } from 'react-router-dom';
-import theme from '../theme';
-import { UserAuth } from '../context/AuthContext';
-import { useEffect } from 'react';
+} from "@mui/material";
+import { Menu } from "@mui/icons-material";
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
 const NavBar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user, logoutUser } = UserAuth();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const location = useLocation();
@@ -32,7 +31,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logoutUser();
-    navigate('/');
+    navigate("/");
   };
 
   const toggleDrawer = () => {
@@ -44,13 +43,13 @@ const NavBar = () => {
       <AppBar
         color="default"
         sx={{
-          boxShadow: 'none',
-          borderBottom: '1px solid #e0e0e0',
+          boxShadow: "none",
+          borderBottom: "1px solid #e0e0e0",
         }}
       >
         <Toolbar
           sx={{
-            justifyContent: 'space-between',
+            justifyContent: "space-between",
             px: { xs: 2, md: 5 },
           }}
         >
@@ -59,12 +58,12 @@ const NavBar = () => {
             to="/"
             className='notranslate'
             sx={{
-              textDecoration: 'none',
-              color: 'primary',
+              textDecoration: "none",
+              color: "primary",
               fontWeight: 600,
-              fontSize: '1.8rem',
-              [theme.breakpoints.down('sm')]: {
-                fontSize: '1.2rem',
+              fontSize: "1.8rem",
+              [theme.breakpoints.down("sm")]: {
+                fontSize: "1.2rem",
               },
             }}
           >
@@ -74,12 +73,12 @@ const NavBar = () => {
           {user ? (
             <>
               {isMobile ? (
-                <Box display={{ xs: 'block', md: 'none' }}>
+                <Box display={{ xs: "block", md: "none" }}>
                   <Button
                     onClick={toggleDrawer}
                     aria-label="menu"
                     sx={{
-                      color: 'primary',
+                      color: "primary",
                     }}
                   >
                     <Menu />
@@ -95,11 +94,11 @@ const NavBar = () => {
                     aria-label="home"
                     sx={{
                       py: -1,
-                      height: '2rem',
+                      height: "2rem",
                       mr: 1,
-                      [theme.breakpoints.down('sm')]: {
-                        fontSize: '0.8rem',
-                        height: '1.5rem',
+                      [theme.breakpoints.down("sm")]: {
+                        fontSize: "0.8rem",
+                        height: "1.5rem",
                       },
                     }}
                   >
@@ -113,11 +112,11 @@ const NavBar = () => {
                     aria-label="my-jobs"
                     sx={{
                       py: -1,
-                      height: '2rem',
+                      height: "2rem",
                       mr: 1,
-                      [theme.breakpoints.down('sm')]: {
-                        fontSize: '0.8rem',
-                        height: '1.5rem',
+                      [theme.breakpoints.down("sm")]: {
+                        fontSize: "0.8rem",
+                        height: "1.5rem",
                       },
                     }}
                   >
@@ -129,10 +128,10 @@ const NavBar = () => {
                     onClick={handleLogout}
                     sx={{
                       py: -1,
-                      height: '2rem',
-                      [theme.breakpoints.down('sm')]: {
-                        fontSize: '0.8rem',
-                        height: '1.45rem',
+                      height: "2rem",
+                      [theme.breakpoints.down("sm")]: {
+                        fontSize: "0.8rem",
+                        height: "1.45rem",
                       },
                     }}
                   >
@@ -142,7 +141,7 @@ const NavBar = () => {
               )}
             </>
           ) : (
-            <Box display={{ xs: 'none', md: 'flex' }} alignItems="center">
+            <Box display={{ xs: "none", md: "flex" }} alignItems="center">
               <Button
                 component={Link}
                 to="/login"
@@ -150,10 +149,10 @@ const NavBar = () => {
                 size="small"
                 sx={{
                   py: -1,
-                  height: '2rem',
-                  [theme.breakpoints.down('sm')]: {
-                    fontSize: '0.8rem',
-                    height: '1.5rem',
+                  height: "2rem",
+                  [theme.breakpoints.down("sm")]: {
+                    fontSize: "0.8rem",
+                    height: "1.5rem",
                   },
                 }}
               >
@@ -166,7 +165,7 @@ const NavBar = () => {
 
       {user && (
         <>
-          <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <Box sx={{ display: { xs: "block", md: "none" } }}>
             <Drawer
               anchor="right"
               open={isDrawerOpen}
@@ -179,10 +178,10 @@ const NavBar = () => {
             >
               <Box
                 sx={{
-                  width: '100%',
-                  padding: '20px',
-                  background: '#f5f5f5',
-                  height: '100%',
+                  width: "100%",
+                  padding: "20px",
+                  background: "#f5f5f5",
+                  height: "100%",
                 }}
               >
                 <List>
@@ -192,14 +191,17 @@ const NavBar = () => {
                     to="/"
                     onClick={toggleDrawer}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
+                      display: "flex",
+                      alignItems: "center",
                       mb: 2,
                     }}
                   >
                     <ListItemText
                       primary={
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: "bold" }}
+                        >
                           Home
                         </Typography>
                       }
@@ -211,14 +213,17 @@ const NavBar = () => {
                     to="/myjobs"
                     onClick={toggleDrawer}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
+                      display: "flex",
+                      alignItems: "center",
                       mb: 2,
                     }}
                   >
                     <ListItemText
                       primary={
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: "bold" }}
+                        >
                           My Jobs
                         </Typography>
                       }
@@ -228,19 +233,22 @@ const NavBar = () => {
                     button
                     onClick={handleLogout}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: '#ffffff',
-                      borderRadius: '4px',
-                      '&:hover': {
-                        background: '#f2f2f2',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "#ffffff",
+                      borderRadius: "4px",
+                      "&:hover": {
+                        background: "#f2f2f2",
                       },
                     }}
                   >
                     <ListItemText
                       primary={
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: "bold", color: "primary.main" }}
+                        >
                           Logout
                         </Typography>
                       }
