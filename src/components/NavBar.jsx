@@ -53,9 +53,10 @@ const NavBar = () => {
             px: { xs: 2, md: 5 },
           }}
         >
-          <Button
+          <Button 
             component={Link}
             to="/"
+            className='notranslate'
             sx={{
               textDecoration: "none",
               color: "primary",

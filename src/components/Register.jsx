@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { setSeeker } from "../services/SeekerDetails";
 
 const Register = () => {
@@ -28,12 +28,17 @@ const Register = () => {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     if (user && user.email) {
       setEmail(user.email);
     }
   }, [user]);
+
+  useEffect(() => {
+    onPageLoad();
+  }, [location.pathname]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +64,7 @@ const Register = () => {
     <>
       <Box
         textAlign="left"
-        mt={5}
+        mt={7}
         mb={2}
         sx={{
           marginLeft: { xs: "22px", md: "5%" },
