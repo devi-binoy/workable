@@ -164,7 +164,6 @@ const Register = () => {
               variant="outlined"
               required
               InputProps={{
-                readOnly: true,
                 tabIndex: 0,
               }}
             >
