@@ -29,6 +29,7 @@ export const apply = async (data, userid) => {
     userid: data.userid,
     joblistingId: data.joblistingId,
     jobTitle: data.jobTitle,
+    companyId: data.companyId,
     name: data.name,
     dob: data.dob,
     gender: data.gender,
