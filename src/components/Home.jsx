@@ -212,19 +212,22 @@ function Home() {
     setTotalCount(totalCount);
   };
 
-  const handleSortBy = async (event) => {
-    const sortByValue = event.target.value;
-    setSortBy(sortByValue);
 
-    try {
-      const jobData = await fetchJobListings(sortBy, filterConditions);
-      setJobListings(jobData.jobListings);
-      setLastVisible(jobData.lastVisible);
-      setTotalCount(jobData.totalCount);
-    } catch (error) {
-      console.error("Error fetching sorted job listings:", error);
-    }
-  };
+
+  const handleSortBy = async (event) => {
+  const sortByValue = event.target.value;
+  setSortBy(sortByValue);
+  try {
+    const jobData = await fetchJobListings(sortByValue, filterConditions);
+    setSortBy(sortByValue); 
+    setJobListings(jobData.jobListings);
+    setLastVisible(jobData.lastVisible);
+    setTotalCount(jobData.totalCount);
+  } catch (error) {
+    console.error("Error fetching sorted job listings:", error);
+  }
+};
+
 
   const handleJobCardClick = (jobId) => {
     navigate("/job", { state: { jobId } });
@@ -243,18 +246,14 @@ function Home() {
   };
 
   useEffect(() => {
-    console.log("kkak", workMode, jobType);
   }, [workMode, jobType, experience]);
 
   const handleJobTypeChange = (event) => {
-    console.log(event.target.value);
     setJobType(event.target.value);
-    console.log("jobtype", jobType);
   };
 
   const handlePostedDateChange = (event) => {
     setPostedDate(event.target.value);
-    console.log("date", postedDate);
   };
 
   const handleExperienceChange = (event) => {
@@ -965,7 +964,7 @@ function Home() {
                 }
               />
             </FormGroup>
-            <Typography
+            {/* <Typography
               tabIndex={0}
               variant="subtitle1"
               sx={{
@@ -988,7 +987,7 @@ function Home() {
                 { value: 1000000, label: "10L" },
               ]}
               aria-label="Salary"
-            />
+            /> */}
           </FormControl>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "space-between" }}>

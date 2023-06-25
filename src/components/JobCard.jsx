@@ -16,7 +16,6 @@ const JobCard = ({ job, handleJobCardClick }) => {
   useEffect(() => {
     onPageLoad();
   }, [location.pathname]);
-  console.log(job);
 
   const {
     JobTitle,

@@ -23,16 +23,16 @@ function App() {
         <CssBaseline />
         <AuthContextProvider>
           <Router>
-          {/* <ProtectedRoutes> */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<SeekerLogin />} />
               <Route path="/job" element={<JobPost />} />
+              <Route element={<ProtectedRoutes />}>
                 <Route path="/register" element={<Register />} />
                 <Route path="/apply" element={<Applyform />} />
                 <Route path="/myjobs" element={<MyJobs />} />
+              </Route>
             </Routes>
-          {/* </ProtectedRoutes> */}
           </Router>
         </AuthContextProvider>
       </ThemeProvider>
