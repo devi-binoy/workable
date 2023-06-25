@@ -42,7 +42,7 @@ const Form = () => {
   const location = useLocation();
   const jobid = location.state && location.state.jobId;
   const jobTitle = location.state && location.state.jobTitle;
-
+  const companyId = location.state && location.state.companyId;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,6 +102,7 @@ const Form = () => {
       gender: gender,
       joblistingId: jobid,
       jobTitle: jobTitle,
+      companyId : companyId,
       coverLetter: coverLetter,
     };
     setIsApplying(true);
