@@ -54,7 +54,7 @@ const handleApplyClick = async () => {
     if (applicant) {
       setDialogOpen(true);
     } else {
-      navigate("/apply", { state: { jobId, jobTitle: jobData.JobTitle } });
+      navigate("/apply", { state: { jobId, jobTitle: jobData.JobTitle, companyId: jobData.userid } });
     }
   } else {
     localStorage.setItem("prevLocation", "/job");
