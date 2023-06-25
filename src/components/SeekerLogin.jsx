@@ -14,6 +14,13 @@ const SeekerLogin = () => {
   const { createUser, loginUser, loginGoogle } = UserAuth();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const[wrong,setWrong] = useState(false);
+
+  useEffect(() => {
+    if(wrong){
+        setErrorMessage("Invalid Account, Please use Employer portal.");
+    }
+}, [wrong])
 
   const location = useLocation();
   useEffect(() => {
@@ -30,25 +37,47 @@ const SeekerLogin = () => {
     }
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin =(e) => {
+    setErrorMessage("");
     e.preventDefault();
-    try {
-      await loginUser(email, password);
-      navigate("/");
-    } catch (err) {
-      setErrorMessage(err.message);
-    }
+
+      loginUser(email, password)
+        .then((loggedIn) => {
+          if(loggedIn)
+            {  
+                navigate('/');
+            }
+
+        })
+        .catch((error) => {setWrong(true);
+        console.log(error.code);
+        if(error.code=== null)
+        setErrorMessage(error);
+        else
+        setErrorMessage(error.code);
+        });
   };
 
-  const handleGoogle = async (e) => {
+  const handleGoogle = async(e) => {
     e.preventDefault();
-    try {
-      await loginGoogle();
-      navigate("/");
-    } catch (err) {
-      setErrorMessage(err.message);
-    }
-  };
+   loginGoogle().then((loggedIn) => {
+    
+    if(loggedIn==="new")
+      {   
+          navigate('/register');
+      }
+      else if(loggedIn==="old")
+      {
+            navigate('/');
+      }
+    }) .catch((error) => {setWrong(true);
+      console.log(error.code);
+      if(error.code=== null)
+      setErrorMessage(error);
+      else
+      setErrorMessage(error.code);
+      });
+}
 
   return (
     <Grid container overflow="auto">
