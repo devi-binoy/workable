@@ -17,7 +17,7 @@ export const apply = async (data, userid) => {
   const joblistingRef = doc(db, "joblistings", data.joblistingId);
   const joblistingSnapshot = await getDoc(joblistingRef);
   const joblistingData = joblistingSnapshot.data();
-  const isDisabilityIncluded = data.disabilityCategory.every((disability) =>
+  const isDisabilityIncluded = data.disabilityCategory.some((disability) =>
     joblistingData.disabilityCategory.includes(disability)
   );
   if (!isDisabilityIncluded) {
@@ -29,6 +29,7 @@ export const apply = async (data, userid) => {
     userid: data.userid,
     joblistingId: data.joblistingId,
     jobTitle: data.jobTitle,
+    companyId: data.companyId,
     name: data.name,
     dob: data.dob,
     gender: data.gender,
@@ -111,5 +112,21 @@ export const getApplied = async (userid) => {
   } catch (error) {
     console.error("Error fetching applied job details:", error);
     return [];
+  }
+};
+
+export const hasApplied = async (userId, jobId) => {
+  try {
+    const applicantsQuery = query(
+      collection(db, "applicants"),
+      where("userid", "==", userId),
+      where("joblistingId", "==", jobId)
+    );
+    const applicantSnapshot = await getDocs(applicantsQuery);
+
+    return !applicantSnapshot.empty;
+  } catch (error) {
+    console.error("Error checking application:", error);
+    throw error;
   }
 };

@@ -42,8 +42,7 @@ const Form = () => {
   const location = useLocation();
   const jobid = location.state && location.state.jobId;
   const jobTitle = location.state && location.state.jobTitle;
-  console.log(jobTitle);
-
+  const companyId = location.state && location.state.companyId;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,6 +60,22 @@ const Form = () => {
       } catch (error) {
         console.error("Error fetching seeker data:", error);
       }
+
+    // try {
+    //     const seekerData = await getSeeker(uid);
+    //     setName(seekerData.name);
+    //     setResumeLink(seekerData.resumeLink);
+    //     setContactNumber(seekerData.contactNumber);
+    //     setDisabilityCategory(seekerData.disabilityCategory);
+    //     setEmail(seekerData.email);
+    //     setAddress(seekerData.address);
+    //     setDob(seekerData.dob);
+    //     setGender(seekerData.gender);
+    //     setExperience(seekerData.experience);
+    //     setQualification(seekerData.qualification);
+    //   } catch (error) {
+    //     console.error("Error fetching seeker data:", error);
+    //   }
     };
 
     fetchData();
@@ -69,7 +84,7 @@ const Form = () => {
   useEffect(() => {
     onPageLoad();
   }, [location.pathname]);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,6 +102,7 @@ const Form = () => {
       gender: gender,
       joblistingId: jobid,
       jobTitle: jobTitle,
+      companyId : companyId,
       coverLetter: coverLetter,
     };
     setIsApplying(true);

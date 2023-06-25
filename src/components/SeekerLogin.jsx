@@ -21,9 +21,12 @@ const SeekerLogin = () => {
         setErrorMessage("Invalid Account, Please use Employer portal.");
     }
 }, [wrong])
+  const [previousLocation, setPreviousLocation] = useState(null);
 
   const location = useLocation();
   useEffect(() => {
+    setPreviousLocation(location.state?.from);
+    console.log("Location: " + previousLocation);
     onPageLoad();
   }, [location.pathname]);
 
@@ -57,6 +60,7 @@ const SeekerLogin = () => {
         setErrorMessage(error.code);
         });
   };
+  
 
   const handleGoogle = async(e) => {
     e.preventDefault();
@@ -103,13 +107,13 @@ const SeekerLogin = () => {
       >
         <Typography
           variant="h3"
-          mt={6}
+          mt={14}
           ml={4}
           fontSize={45}
           fontWeight={600}
           color={theme.typography.green}
         >
-          WorkAble
+          <div className="notranslate">WorkAble</div>
         </Typography>
 
         {login ? (
@@ -119,7 +123,7 @@ const SeekerLogin = () => {
           >
             <Typography
               variant="h4"
-              mt={10}
+              mt={2}
               ml={4}
               fontSize={25}
               fontWeight={600}
@@ -185,7 +189,7 @@ const SeekerLogin = () => {
           >
             <Typography
               variant="h4"
-              mt={10}
+              mt={2}
               ml={4}
               fontSize={25}
               fontWeight={600}

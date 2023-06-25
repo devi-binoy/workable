@@ -16,7 +16,6 @@ const JobCard = ({ job, handleJobCardClick }) => {
   useEffect(() => {
     onPageLoad();
   }, [location.pathname]);
-  console.log(job);
 
   const {
     JobTitle,
@@ -90,6 +89,7 @@ const JobCard = ({ job, handleJobCardClick }) => {
             />
           </Box>
           <Box
+            ml={1}
             sx={{
               display: "flex",
               flexDirection: "column",
