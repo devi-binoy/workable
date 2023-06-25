@@ -42,41 +42,47 @@ const SeekerLogin = () => {
     setErrorMessage("");
     e.preventDefault();
 
-      loginUser(email, password)
-        .then((loggedIn) => {
-          if(loggedIn)
-            {  
-                navigate('/');
-            }
-
-        })
-        .catch((error) => {setWrong(true);
+    loginUser(email, password)
+      .then((loggedIn) => {
+        if (loggedIn) {
+          if (jobId){
+            navigate("/job", { state: { jobId } });
+          } else {
+            navigate("/");
+          }
+        }
+      })
+      .catch((error) => {
+        setWrong(true);
         console.log(error.code);
-        if(error.code=== null)
-        setErrorMessage(error);
-        else
-        setErrorMessage(error.code);
-        });
+        if (error.code === null) setErrorMessage(error);
+        else setErrorMessage(error.code);
+      });
   };
 
   const handleGoogle = async (e) => {
     e.preventDefault();
-   loginGoogle().then((loggedIn) => {
-    
-    if(loggedIn==="new")
-      {   
-          navigate('/register');
-      }
-      else if(loggedIn==="old")
-      {
-            navigate('/');
-      }
-    }) .catch((error) => {setWrong(true);
-      console.log(error.code);
-      if(error.code=== null)
-      setErrorMessage(error);
-      else
-      setErrorMessage(error.code);
+    loginGoogle()
+      .then((loggedIn) => {
+        if (loggedIn === "new") {
+          navigate("/register");
+        } else if (loggedIn === "old") {
+          if (previousLocation) {
+            navigate(previousLocation, { state: { jobId: prevJobId } });
+          } else {
+            if (jobId){
+              navigate("/job", { state: { jobId } });
+            } else {
+              navigate("/");
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        setWrong(true);
+        console.log(error.code);
+        if (error.code === null) setErrorMessage(error);
+        else setErrorMessage(error.code);
       });
   };
 
