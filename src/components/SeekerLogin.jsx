@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import theme from "../theme";
 import { UserAuth } from "../context/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 
 const SeekerLogin = () => {
   const [login, setLogin] = useState(true);
@@ -14,19 +14,17 @@ const SeekerLogin = () => {
   const { createUser, loginUser, loginGoogle } = UserAuth();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const[wrong,setWrong] = useState(false);
+  const [wrong, setWrong] = useState(false);
 
   useEffect(() => {
-    if(wrong){
-        setErrorMessage("Invalid Account, Please use Employer portal.");
+    if (wrong) {
+      setErrorMessage("Invalid Account, Please use Employer portal.");
     }
-}, [wrong])
-  const [previousLocation, setPreviousLocation] = useState(null);
-
+  }, [wrong]);
   const location = useLocation();
+  const jobId = location.state && location.state.jobId;
+  console.log("previousLocation: ",jobId);
   useEffect(() => {
-    setPreviousLocation(location.state?.from);
-    console.log("Location: " + previousLocation);
     onPageLoad();
   }, [location.pathname]);
 
@@ -40,48 +38,53 @@ const SeekerLogin = () => {
     }
   };
 
-  const handleLogin =(e) => {
+  const handleLogin = (e) => {
     setErrorMessage("");
     e.preventDefault();
 
-      loginUser(email, password)
-        .then((loggedIn) => {
-          if(loggedIn)
-            {  
-                navigate('/');
-            }
-
-        })
-        .catch((error) => {setWrong(true);
+    loginUser(email, password)
+      .then((loggedIn) => {
+        if (loggedIn) {
+          if (jobId){
+            navigate("/job", { state: { jobId } });
+          } else {
+            navigate("/");
+          }
+        }
+      })
+      .catch((error) => {
+        setWrong(true);
         console.log(error.code);
-        if(error.code=== null)
-        setErrorMessage(error);
-        else
-        setErrorMessage(error.code);
-        });
-  };
-  
-
-  const handleGoogle = async(e) => {
-    e.preventDefault();
-   loginGoogle().then((loggedIn) => {
-    
-    if(loggedIn==="new")
-      {   
-          navigate('/register');
-      }
-      else if(loggedIn==="old")
-      {
-            navigate('/');
-      }
-    }) .catch((error) => {setWrong(true);
-      console.log(error.code);
-      if(error.code=== null)
-      setErrorMessage(error);
-      else
-      setErrorMessage(error.code);
+        if (error.code === null) setErrorMessage(error);
+        else setErrorMessage(error.code);
       });
-}
+  };
+
+  const handleGoogle = async (e) => {
+    e.preventDefault();
+    loginGoogle()
+      .then((loggedIn) => {
+        if (loggedIn === "new") {
+          navigate("/register");
+        } else if (loggedIn === "old") {
+          if (previousLocation) {
+            navigate(previousLocation, { state: { jobId: prevJobId } });
+          } else {
+            if (jobId){
+              navigate("/job", { state: { jobId } });
+            } else {
+              navigate("/");
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        setWrong(true);
+        console.log(error.code);
+        if (error.code === null) setErrorMessage(error);
+        else setErrorMessage(error.code);
+      });
+  };
 
   return (
     <Grid container overflow="auto">

@@ -57,9 +57,7 @@ const handleApplyClick = async () => {
       navigate("/apply", { state: { jobId, jobTitle: jobData.JobTitle, companyId: jobData.userid } });
     }
   } else {
-    localStorage.setItem("prevLocation", "/job");
-    localStorage.setItem("jobId", jobId);
-    navigate("/login");
+    navigate("/login", { state: { jobId } });
   }
 };
 
