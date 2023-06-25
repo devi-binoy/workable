@@ -9,7 +9,6 @@ export const fetchJobDetails = async (jobId) => {
         const data = docSnap.data();
         return data;
       } else {
-        console.log("No job found with the provided jobId");
         return null;
       }
     } catch (error) {

@@ -4,7 +4,6 @@ import {
   collection,
   addDoc,
   serverTimestamp,
-  updateDoc,
   query,
   where,
   getDocs,
@@ -45,20 +44,9 @@ export const apply = async (data, userid) => {
     status: "Applied",
   })
     .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
     })
     .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
 
-  await updateDoc(joblistingRef, {
-    numberofapplicants: increment(1),
-  })
-    .then(() => {
-      console.log("Number of applicants updated in joblistings collection");
-    })
-    .catch((error) => {
-      console.error("Error updating number of applicants: ", error);
     });
   return true;
 };
@@ -70,45 +58,24 @@ export const getApplied = async (userid) => {
       where("userid", "==", userid)
     );
     const applicantSnapshot = await getDocs(applicantsQuery);
+    const appliedListings = [];
 
-    const joblistingIds = [];
-    const applicationSnapshots = [];
-
-    applicantSnapshot.forEach((doc) => {
-      const { joblistingId } = doc.data();
-      joblistingIds.push(joblistingId);
-      applicationSnapshots.push(
-        getDocs(
-          query(
-            collection(db, "applicants"),
-            where("joblistingId", "==", joblistingId),
-            limit(1)
-          )
-        )
-      );
-    });
-
-    const jobDetails = [];
-
-    const applicationResults = await Promise.all(applicationSnapshots);
-
-    for (let i = 0; i < joblistingIds.length; i++) {
-      const joblistingId = joblistingIds[i];
-      const joblistingDoc = await getDoc(doc(db, "joblistings", joblistingId));
-      if (joblistingDoc.exists()) {
-        const jobData = joblistingDoc.data();
-        const applicationSnapshot = applicationResults[i];
-        if (!applicationSnapshot.empty) {
-          const applicationDoc = applicationSnapshot.docs[0];
-          const { status } = applicationDoc.data();
-          jobData.status = status;
-        }
-        jobDetails.push(jobData);
+    for (const temp of applicantSnapshot.docs) {
+      const applicantData = temp.data();
+      const jobDocRef = doc(db, "joblistings", applicantData.joblistingId);
+      const jobDocSnapshot = await getDoc(jobDocRef);
+      
+      if (jobDocSnapshot.exists()) {
+        const jobData = jobDocSnapshot.data();
+        const listing = {
+          ...applicantData,
+          id: doc.id,
+          ...jobData
+        };
+        appliedListings.push(listing);
       }
     }
-
-    console.log("Job details for applied listings:", jobDetails);
-    return jobDetails;
+    return appliedListings;
   } catch (error) {
     console.error("Error fetching applied job details:", error);
     return [];

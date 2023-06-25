@@ -29,10 +29,7 @@ const NavBar = () => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'lang' && mutation.target.lang === 'ml') {
-          // Language changed to Malayalam ('ml')
-          console.log('Language changed to Malayalam');
           setIsmalayalam(true);
-          // Perform your desired actions here
         }
         else{
           setIsmalayalam(false);

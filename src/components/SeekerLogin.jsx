@@ -26,7 +26,6 @@ const SeekerLogin = () => {
   const location = useLocation();
   useEffect(() => {
     setPreviousLocation(location.state?.from);
-    console.log("Location: " + previousLocation);
     onPageLoad();
   }, [location.pathname]);
 
@@ -53,7 +52,6 @@ const SeekerLogin = () => {
 
         })
         .catch((error) => {setWrong(true);
-        console.log(error.code);
         if(error.code=== null)
         setErrorMessage(error);
         else
@@ -75,7 +73,6 @@ const SeekerLogin = () => {
             navigate('/');
       }
     }) .catch((error) => {setWrong(true);
-      console.log(error.code);
       if(error.code=== null)
       setErrorMessage(error);
       else
