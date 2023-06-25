@@ -8,11 +8,13 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { collection, doc, setDoc, getDoc } from "firebase/firestore"; 
+import { checkRole } from "../services/Auth";
 
 const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [role, setRole] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const createUser = (email, password) => {
@@ -22,13 +24,7 @@ export const AuthContextProvider = ({ children }) => {
           const user = userCredential.user;
           const { uid, email } = user;
           console.log("User Id: " + uid);
-          setDoc(doc(db, "jobseekers", uid), { email }) 
-            .then(() => {
-              resolve(true);
-            })
-            .catch((error) => {
-              reject(error);
-            });
+          setRole("jobseekers")
         })
         .catch((error) => {
           reject(error);
@@ -39,23 +35,23 @@ export const AuthContextProvider = ({ children }) => {
   const loginUser = (email, password) => {
     return new Promise((resolve, reject) => {
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async(userCredential) => {
           const user = userCredential.user;
           const { uid } = user;
-
-          const docRef = doc(db, "jobseekers", uid); 
-          getDoc(docRef) // 
-            .then((docSnap) => {
-              if (docSnap.exists()) {
-                const userData = docSnap.data();
-                console.log(userData.email);
-              }
-
-              resolve(true);
-            })
-            .catch((error) => {
-              reject(error);
-            });
+          const role = await checkRole(uid);
+          if(role==="employer")
+          return new Promise((resolveLogout, rejectLogout) => {
+            logoutUser()
+              .then(() => {
+                rejectLogout("Please login using Employer portal");
+              })
+              .catch((error) => {
+                rejectLogout("Please login using Employer portal");
+              });
+          });
+          setRole(role);
+          resolve(true)
+         
         })
         .catch((error) => {
           reject(error);
@@ -64,21 +60,43 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const loginGoogle = () => {
-    return new Promise((resolve, reject) => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // The signed-in user info.
-          const user = result.user;
-          console.log(user);
-          resolve(true);
-          // ...
-        })
-        .catch((error) => {
-          // Handle errors here
-          reject(error);
-        });
+    return new Promise ((resolve,reject)=>{
+    signInWithPopup(auth, provider)
+    .then(async(result) => {
+    // The signed-in user info.
+    //check if user has already signed up
+
+    const user = result.user;
+    const uid = user.uid;
+    if(uid){
+    const role = await checkRole(uid);
+    
+    if(role==="none"){
+        setRole("jobseekers");
+        resolve("new");
+    }
+    else  if(role==="employer")
+    return new Promise((resolveLogout, rejectLogout) => {
+        logoutUser()
+          .then(() => {
+            rejectLogout("Please login using Employer portal");
+          })
+          .catch((error) => {
+            rejectLogout("Please login using Employer portal");
+          });
+      });
+    
+    setRole(role);
+   // console.log(user);
+    resolve("old")
+    // ...
+    }}).catch((error) => {
+    // Handle errors here
+   reject(error);
     });
-  };
+});
+  
+}
 
   const logoutUser = () => {
     signOut(auth)
@@ -105,6 +123,19 @@ export const AuthContextProvider = ({ children }) => {
       }
     );
   }, []);
+
+  async function rolefetching(){
+    if(user.uid){
+    const role = await checkRole(user.uid);
+    }
+    setRole(role);
+ }
+ useEffect(() => {
+  if(user!==null)
+  rolefetching();
+
+
+}, [user])
 
   return (
     <UserContext.Provider
