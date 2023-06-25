@@ -138,10 +138,10 @@ const handleApplyClick = async () => {
           lg={12}
           variant="heading2"
           sx={{
+            hyphens: "auto",
             fontSize: "2rem",
             fontWeight: "600",
             [theme.breakpoints.down("md")]: {
-              hyphens: "auto",
               fontSize: "1.5rem",
             },
             [theme.breakpoints.down("sm")]: {
@@ -149,16 +149,16 @@ const handleApplyClick = async () => {
             },
           }}
         >
-          {jobData.JobTitle}
+        {jobData.companyname}
         </Typography>
         <Typography
               tabIndex={0}
           lg={12}
           variant="heading1"
           sx={{
+            hyphens: "auto",
             fontWeight: "bold",
             [theme.breakpoints.down("md")]: {
-              hyphens: "auto",
               fontSize: "1.2rem",
             },
             [theme.breakpoints.down("sm")]: {
@@ -166,7 +166,7 @@ const handleApplyClick = async () => {
             }
           }}
         >
-          {jobData.companyname}
+          {jobData.JobTitle}
         </Typography>
       </Grid>
       <Button

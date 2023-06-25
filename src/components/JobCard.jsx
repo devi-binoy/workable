@@ -89,6 +89,7 @@ const JobCard = ({ job, handleJobCardClick }) => {
             />
           </Box>
           <Box
+            ml={1}
             sx={{
               display: "flex",
               flexDirection: "column",

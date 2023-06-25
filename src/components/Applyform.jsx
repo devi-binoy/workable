@@ -84,7 +84,7 @@ const Form = () => {
   useEffect(() => {
     onPageLoad();
   }, [location.pathname]);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
