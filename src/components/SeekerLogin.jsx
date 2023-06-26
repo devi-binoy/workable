@@ -23,20 +23,27 @@ const SeekerLogin = () => {
   }, [wrong]);
   const location = useLocation();
   const jobId = location.state && location.state.jobId;
-  console.log("previousLocation: ",jobId);
   useEffect(() => {
     onPageLoad();
   }, [location.pathname]);
 
-  const handleSignup = async (e) => {
+  const handleSignup = async(e) => {
+    setErrorMessage("");
     e.preventDefault();
-    try {
-      await createUser(email, password);
-      navigate("/register");
-    } catch (err) {
-      setErrorMessage(err.message);
-    }
-  };
+    createUser(email, password).then((loggedIn) => {
+        if(loggedIn)
+          { 
+              navigate('/register');
+          }
+        }
+        ).catch((error) => {
+        console.log(error.code);
+        setErrorMessage(error.code);
+        });
+
+
+
+}
 
   const handleLogin = (e) => {
     setErrorMessage("");
@@ -67,14 +74,10 @@ const SeekerLogin = () => {
         if (loggedIn === "new") {
           navigate("/register");
         } else if (loggedIn === "old") {
-          if (previousLocation) {
-            navigate(previousLocation, { state: { jobId: prevJobId } });
+          if (jobId){
+            navigate("/job", { state: { jobId } });
           } else {
-            if (jobId){
-              navigate("/job", { state: { jobId } });
-            } else {
-              navigate("/");
-            }
+            navigate("/");
           }
         }
       })
