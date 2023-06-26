@@ -224,8 +224,7 @@ function Home() {
     setLastVisible(jobData.lastVisible);
     setTotalCount(jobData.totalCount);
   } catch (error) {
-    console.error("Error fetching sorted job listings:", error);
-  }
+}
 };
 
 

@@ -24,7 +24,6 @@ export const AuthContextProvider = ({ children }) => {
           const user = userCredential.user;
           console.log(user);
           const { uid, email } = user;
-          console.log("User Id: " + uid);
           setRole("jobseekers")
           resolve(true);
 
@@ -90,12 +89,9 @@ export const AuthContextProvider = ({ children }) => {
       });
     
     setRole(role);
-   // console.log(user);
     resolve("old")
-    // ...
     }}).catch((error) => {
-    // Handle errors here
-   reject(error);
+    reject(error);
     });
 });
   

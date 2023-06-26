@@ -15,12 +15,6 @@ export const setSeeker = async (data, userId) => {
     experience: data.experience,
     qualification: data.qualification,
   })
-    .then(() => {
-      console.log("Document successfully updated");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-    });
 };
 
 export const getSeeker = async (userId) => {
@@ -31,7 +25,6 @@ export const getSeeker = async (userId) => {
       const data = docSnap.data();
       return data;
     } else {
-      console.log("No job seeker found with the provided userId");
       return null;
     }
   } catch (error) {

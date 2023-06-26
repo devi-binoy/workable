@@ -24,7 +24,6 @@ function JobPost() {
     const fetchJobData = async () => {
       try {
         const data = await fetchJobDetails(jobId);
-        console.log("Job DATA:", data);
         setJobData(data);
       } catch (error) {
         console.error("Error fetching job details:", error);
@@ -42,7 +41,6 @@ function JobPost() {
 
   const ifApplied = async () => {
     const applicant = await hasApplied(user.uid, jobId)
-    console.log("Applied?",applicant);
     return applicant;
 };
   
