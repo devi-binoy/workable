@@ -20,11 +20,14 @@ export const AuthContextProvider = ({ children }) => {
   const createUser = (email, password) => {
     return new Promise((resolve, reject) => {
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async(userCredential) => {
           const user = userCredential.user;
+          console.log(user);
           const { uid, email } = user;
           console.log("User Id: " + uid);
           setRole("jobseekers")
+          resolve(true);
+
         })
         .catch((error) => {
           reject(error);
