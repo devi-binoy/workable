@@ -8,7 +8,6 @@ function ProtectedRoutes() {
 
   useEffect(() => {
     if (user == null || user === undefined) {
-      console.log('user not found');
       navigate('/login');
     }
   }, [user, navigate]);
