@@ -22,6 +22,7 @@ const JobCard = ({ job, handleJobCardClick }) => {
     jobDescription,
     disabilityCategory,
     JobType,
+    workMode,
     NumberofOpenings,
     SalaryRange,
     experience,
@@ -263,7 +264,7 @@ const JobCard = ({ job, handleJobCardClick }) => {
                   },
                 }}
               >
-                {JobType} | {JobLocation} | {NumberofOpenings} openings | ₹
+                {JobType} | {workMode} | {JobLocation} | {NumberofOpenings} openings | ₹
                 {SalaryRange} | {experience}
               </Typography>
             </Box>

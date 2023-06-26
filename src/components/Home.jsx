@@ -55,6 +55,8 @@ function Home() {
   const { user } = UserAuth();
 
   const disabilityCategories = [
+    "Blindness",
+    "Low-vision",
     "Leprosy Cured persons",
     "Hearing Impairment",
     "Locomotor Disability",
@@ -672,7 +674,7 @@ function Home() {
                     size="small"
                     sx={{ paddingLeft: "8px", color: "#3AAE45" }}
                     value="OnSite"
-                    checked={workMode === "OnSite"}
+                    checked={workMode === "On-Site"}
                     onChange={handleWorkModeChange}
                   />
                 }

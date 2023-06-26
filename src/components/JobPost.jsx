@@ -223,7 +223,7 @@ const handleApplyClick = async () => {
           {" "}
           Posted on {jobData.posted_date?.toDate().toString()} •{" "}
           {jobData.numberofapplicants} Applicants • {jobData.NumberofOpenings}{" "}
-          Openings{" "}
+          Openings{" "} • {jobData.workMode} • {jobData.JobType}
         </Typography>
         <Typography
               tabIndex={0}
